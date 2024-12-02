@@ -414,6 +414,10 @@ processors:
     field: event.outcome
     value: success
     if: ctx.juniper?.srx?.ping_test != null
+- set:
+    field: event.outcome
+    value: failure
+    if: ctx.juniper?.srx?.tag == "SSHD_LOGIN_FAILED"
 
 ####################################
 ## ECS Server/Destination Mapping ##
