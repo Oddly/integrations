@@ -741,6 +741,11 @@ processors:
     field: related.ip
     value: '{{{juniper.srx.system.remote_gateway}}}'
     allow_duplicates: false
+- append:
+    if: 'ctx.source?.user?.name != null'
+    field: related.user
+    value: '{{{source.user.name}}}'
+    allow_duplicates: false
 
 ######################
 ## ECS Observer Mapping ##
