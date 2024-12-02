@@ -377,6 +377,10 @@ processors:
     field: event.category
     value: network
 - append:
+    field: event.category
+    value: authentication
+    if: ctx.juniper?.srx?.tag == "SSHD_LOGIN_FAILED"
+- append:
     field: event.type
     value: allowed
     if: ctx.juniper?.srx?.firewall?.filter_action == 'A'
