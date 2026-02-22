@@ -1,9 +1,9 @@
 {
     "expected": [
         {
-            "@timestamp": "2026-02-22T11:56:11.000Z",
+            "@timestamp": "2026-02-15T14:30:01.000Z",
             "event": {
-                "ingested": "2026-02-22T11:56:11.000Z",
+                "ingested": "2026-02-15T14:30:01.000Z",
                 "kind": "event",
                 "category": ["web"],
                 "type": ["access"]
@@ -26,7 +26,7 @@
                 "response": {
                     "status_code": 200,
                     "body": {
-                        "bytes": 988
+                        "bytes": 4523
                     }
                 },
                 "version": "1.1"
@@ -46,9 +46,9 @@
             "message": "GET /api2/json/cluster/resources 200"
         },
         {
-            "@timestamp": "2026-02-22T11:55:03.000Z",
+            "@timestamp": "2026-02-15T14:29:55.000Z",
             "event": {
-                "ingested": "2026-02-22T11:55:03.000Z",
+                "ingested": "2026-02-15T14:29:55.000Z",
                 "kind": "event",
                 "category": ["web"],
                 "type": ["access"]
@@ -79,9 +79,9 @@
             "message": "GET /api2/json/cluster/ha/resources 401"
         },
         {
-            "@timestamp": "2026-02-22T10:05:20.000Z",
+            "@timestamp": "2026-02-15T14:30:20.000Z",
             "event": {
-                "ingested": "2026-02-22T10:05:20.000Z",
+                "ingested": "2026-02-15T14:30:20.000Z",
                 "kind": "event",
                 "category": ["web"],
                 "type": ["access"]
@@ -125,9 +125,9 @@
             "message": "GET /api2/json/nodes/lab/storage/hdd_kubernetes/status 200"
         },
         {
-            "@timestamp": "2026-02-22T10:06:01.000Z",
+            "@timestamp": "2026-02-15T14:31:01.000Z",
             "event": {
-                "ingested": "2026-02-22T10:06:01.000Z",
+                "ingested": "2026-02-15T14:31:01.000Z",
                 "kind": "event",
                 "category": ["authentication"],
                 "type": ["info"],
@@ -171,9 +171,9 @@
             "message": "POST /api2/json/access/ticket 200"
         },
         {
-            "@timestamp": "2026-02-22T10:06:05.000Z",
+            "@timestamp": "2026-02-15T14:31:05.000Z",
             "event": {
-                "ingested": "2026-02-22T10:06:05.000Z",
+                "ingested": "2026-02-15T14:31:05.000Z",
                 "kind": "event",
                 "category": ["authentication"],
                 "type": ["info"],
@@ -215,6 +215,324 @@
                 "type": "virtualization"
             },
             "message": "POST /api2/json/access/ticket 401"
+        },
+        {
+            "@timestamp": "2026-02-15T14:30:30.000Z",
+            "event": {
+                "ingested": "2026-02-15T14:30:30.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "172.30.0.2"
+            },
+            "user": {
+                "name": "monitoring"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pve",
+                    "token_id": "elastic"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 1842
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/nodes/lab/status"
+            },
+            "related": {
+                "ip": ["172.30.0.2"],
+                "user": ["monitoring"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/nodes/lab/status 200"
+        },
+        {
+            "@timestamp": "2026-02-15T14:30:31.000Z",
+            "event": {
+                "ingested": "2026-02-15T14:30:31.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "172.30.0.3"
+            },
+            "user": {
+                "name": "monitoring"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pve",
+                    "token_id": "elastic"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 4523
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/cluster/resources"
+            },
+            "related": {
+                "ip": ["172.30.0.3"],
+                "user": ["monitoring"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/cluster/resources 200"
+        },
+        {
+            "@timestamp": "2026-02-15T14:32:15.000Z",
+            "event": {
+                "ingested": "2026-02-15T14:32:15.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "127.0.0.1"
+            },
+            "user": {
+                "name": "root"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pam"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 412
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/nodes/lab/qemu/150/status/current"
+            },
+            "related": {
+                "ip": ["127.0.0.1"],
+                "user": ["root"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/nodes/lab/qemu/150/status/current 200"
+        },
+        {
+            "@timestamp": "2026-02-15T14:32:18.000Z",
+            "event": {
+                "ingested": "2026-02-15T14:32:18.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "127.0.0.1"
+            },
+            "user": {
+                "name": "root"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pam"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 500,
+                    "body": {
+                        "bytes": 89
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/nodes/lab/qemu/150/agent/network-get-interfaces"
+            },
+            "related": {
+                "ip": ["127.0.0.1"],
+                "user": ["root"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/nodes/lab/qemu/150/agent/network-get-interfaces 500"
+        },
+        {
+            "@timestamp": "2026-02-15T14:33:00.000Z",
+            "event": {
+                "ingested": "2026-02-15T14:33:00.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "10.0.0.55"
+            },
+            "user": {
+                "name": "user1"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "ldap"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 2156
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/cluster/tasks"
+            },
+            "related": {
+                "ip": ["10.0.0.55"],
+                "user": ["user1"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/cluster/tasks 200"
+        },
+        {
+            "@timestamp": "2026-02-15T14:33:45.000Z",
+            "event": {
+                "ingested": "2026-02-15T14:33:45.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "192.168.2.17"
+            },
+            "user": {
+                "name": "root"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pam"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "DELETE"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 52
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/nodes/lab/qemu/999"
+            },
+            "related": {
+                "ip": ["192.168.2.17"],
+                "user": ["root"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "DELETE /api2/json/nodes/lab/qemu/999 200"
+        },
+        {
+            "@timestamp": "2026-02-15T14:30:32.000Z",
+            "event": {
+                "ingested": "2026-02-15T14:30:32.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "172.30.0.2"
+            },
+            "user": {
+                "name": "monitoring"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pve",
+                    "token_id": "elastic"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 234
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/cluster/ha/resources"
+            },
+            "related": {
+                "ip": ["172.30.0.2"],
+                "user": ["monitoring"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/cluster/ha/resources 200"
         }
     ]
 }

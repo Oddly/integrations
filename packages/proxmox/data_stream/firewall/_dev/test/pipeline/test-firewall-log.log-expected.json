@@ -1,25 +1,25 @@
 {
     "expected": [
         {
-            "@timestamp": "2020-07-01T00:42:13.000+02:00",
+            "@timestamp": "2026-02-15T10:15:01.000Z",
             "event": {
-                "ingested": "2026-02-21T10:05:21.000Z",
+                "ingested": ".*",
                 "kind": "event",
                 "category": ["network"],
                 "type": ["connection", "denied"],
                 "action": "drop"
             },
             "source": {
-                "ip": "192.168.1.2",
-                "port": 23658
+                "ip": "172.30.0.1",
+                "port": 138
             },
             "destination": {
-                "ip": "192.168.1.56",
-                "port": 443
+                "ip": "172.30.255.255",
+                "port": 138
             },
             "network": {
-                "transport": "tcp",
-                "bytes": 60
+                "transport": "udp",
+                "bytes": 78
             },
             "proxmox": {
                 "firewall": {
@@ -27,31 +27,31 @@
                 }
             },
             "related": {
-                "ip": ["192.168.1.2", "192.168.1.56"]
+                "ip": ["172.30.0.1", "172.30.255.255"]
             },
             "observer": {
                 "vendor": "Proxmox",
                 "product": "Proxmox VE",
                 "type": "firewall"
             },
-            "message": "drop 192.168.1.2:23658 -> 192.168.1.56:443 tcp"
+            "message": "drop 172.30.0.1:138 -> 172.30.255.255:138 udp"
         },
         {
-            "@timestamp": "2020-07-01T00:42:15.000+02:00",
+            "@timestamp": "2026-02-15T10:15:03.000Z",
             "event": {
-                "ingested": "2026-02-21T10:05:21.000Z",
+                "ingested": ".*",
                 "kind": "event",
                 "category": ["network"],
                 "type": ["connection", "allowed"],
                 "action": "accept"
             },
             "source": {
-                "ip": "10.0.0.1",
-                "port": 443
+                "ip": "192.168.2.17",
+                "port": 49521
             },
             "destination": {
-                "ip": "10.0.0.2",
-                "port": 54321
+                "ip": "192.168.2.150",
+                "port": 8006
             },
             "network": {
                 "transport": "tcp",
@@ -63,19 +63,19 @@
                 }
             },
             "related": {
-                "ip": ["10.0.0.1", "10.0.0.2"]
+                "ip": ["192.168.2.17", "192.168.2.150"]
             },
             "observer": {
                 "vendor": "Proxmox",
                 "product": "Proxmox VE",
                 "type": "firewall"
             },
-            "message": "accept 10.0.0.1:443 -> 10.0.0.2:54321 tcp"
+            "message": "accept 192.168.2.17:49521 -> 192.168.2.150:8006 tcp"
         },
         {
-            "@timestamp": "2020-07-01T00:42:20.000+02:00",
+            "@timestamp": "2026-02-15T10:15:10.000Z",
             "event": {
-                "ingested": "2026-02-21T10:05:21.000Z",
+                "ingested": ".*",
                 "kind": "event",
                 "category": ["network"],
                 "type": ["connection", "denied"],
@@ -83,10 +83,10 @@
             },
             "source": {
                 "ip": "10.0.0.5",
-                "port": 8080
+                "port": 55432
             },
             "destination": {
-                "ip": "10.0.0.2",
+                "ip": "172.30.0.2",
                 "port": 22
             },
             "network": {
@@ -95,36 +95,36 @@
             },
             "proxmox": {
                 "firewall": {
-                    "chain": "PVEFW-100-IN",
-                    "vmid": "100"
+                    "chain": "PVEFW-150-IN",
+                    "vmid": "150"
                 }
             },
             "related": {
-                "ip": ["10.0.0.5", "10.0.0.2"]
+                "ip": ["10.0.0.5", "172.30.0.2"]
             },
             "observer": {
                 "vendor": "Proxmox",
                 "product": "Proxmox VE",
                 "type": "firewall"
             },
-            "message": "reject 10.0.0.5:8080 -> 10.0.0.2:22 tcp"
+            "message": "reject 10.0.0.5:55432 -> 172.30.0.2:22 tcp"
         },
         {
-            "@timestamp": "2020-07-01T00:42:22.000+02:00",
+            "@timestamp": "2026-02-15T10:15:12.000Z",
             "event": {
-                "ingested": "2026-02-21T10:05:21.000Z",
+                "ingested": ".*",
                 "kind": "event",
                 "category": ["network"],
                 "type": ["connection", "denied"],
                 "action": "drop"
             },
             "source": {
-                "ip": "10.0.0.3",
-                "port": 53
+                "ip": "172.30.1.200",
+                "port": 5353
             },
             "destination": {
-                "ip": "10.0.0.2",
-                "port": 1234
+                "ip": "172.30.0.1",
+                "port": 5353
             },
             "network": {
                 "transport": "udp",
@@ -136,29 +136,29 @@
                 }
             },
             "related": {
-                "ip": ["10.0.0.3", "10.0.0.2"]
+                "ip": ["172.30.1.200", "172.30.0.1"]
             },
             "observer": {
                 "vendor": "Proxmox",
                 "product": "Proxmox VE",
                 "type": "firewall"
             },
-            "message": "drop 10.0.0.3:53 -> 10.0.0.2:1234 udp"
+            "message": "drop 172.30.1.200:5353 -> 172.30.0.1:5353 udp"
         },
         {
-            "@timestamp": "2020-07-01T00:42:25.000+02:00",
+            "@timestamp": "2026-02-15T10:15:15.000Z",
             "event": {
-                "ingested": "2026-02-21T10:05:21.000Z",
+                "ingested": ".*",
                 "kind": "event",
                 "category": ["network"],
                 "type": ["connection", "denied"],
                 "action": "drop"
             },
             "source": {
-                "ip": "10.0.0.4"
+                "ip": "172.30.1.105"
             },
             "destination": {
-                "ip": "10.0.0.2"
+                "ip": "172.30.0.1"
             },
             "network": {
                 "transport": "icmp",
@@ -170,14 +170,195 @@
                 }
             },
             "related": {
-                "ip": ["10.0.0.4", "10.0.0.2"]
+                "ip": ["172.30.1.105", "172.30.0.1"]
             },
             "observer": {
                 "vendor": "Proxmox",
                 "product": "Proxmox VE",
                 "type": "firewall"
             },
-            "message": "drop 10.0.0.4: -> 10.0.0.2: icmp"
+            "message": "drop 172.30.1.105: -> 172.30.0.1: icmp"
+        },
+        {
+            "@timestamp": "2026-02-15T10:15:20.000Z",
+            "event": {
+                "ingested": ".*",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "allowed"],
+                "action": "accept"
+            },
+            "source": {
+                "ip": "172.30.0.2",
+                "port": 40912
+            },
+            "destination": {
+                "ip": "172.30.0.1",
+                "port": 8006
+            },
+            "network": {
+                "transport": "tcp",
+                "bytes": 60
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-HOST-IN"
+                }
+            },
+            "related": {
+                "ip": ["172.30.0.2", "172.30.0.1"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "accept 172.30.0.2:40912 -> 172.30.0.1:8006 tcp"
+        },
+        {
+            "@timestamp": "2026-02-15T10:15:25.000Z",
+            "event": {
+                "ingested": ".*",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "denied"],
+                "action": "drop"
+            },
+            "source": {
+                "ip": "172.30.1.13",
+                "port": 138
+            },
+            "destination": {
+                "ip": "172.30.255.255",
+                "port": 138
+            },
+            "network": {
+                "transport": "udp",
+                "bytes": 229
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-304-OUT",
+                    "vmid": "304"
+                }
+            },
+            "related": {
+                "ip": ["172.30.1.13", "172.30.255.255"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "drop 172.30.1.13:138 -> 172.30.255.255:138 udp"
+        },
+        {
+            "@timestamp": "2026-02-15T10:15:30.000Z",
+            "event": {
+                "ingested": ".*",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "denied"],
+                "action": "drop"
+            },
+            "source": {
+                "ip": "172.30.1.50",
+                "port": 12345
+            },
+            "destination": {
+                "ip": "172.30.0.1",
+                "port": 10001
+            },
+            "network": {
+                "transport": "tcp",
+                "bytes": 40
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-HOST-IN"
+                }
+            },
+            "related": {
+                "ip": ["172.30.1.50", "172.30.0.1"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "drop 172.30.1.50:12345 -> 172.30.0.1:10001 tcp"
+        },
+        {
+            "@timestamp": "2026-02-15T10:15:35.000Z",
+            "event": {
+                "ingested": ".*",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "allowed"],
+                "action": "accept"
+            },
+            "source": {
+                "ip": "192.168.2.17",
+                "port": 49522
+            },
+            "destination": {
+                "ip": "192.168.2.150",
+                "port": 443
+            },
+            "network": {
+                "transport": "tcp",
+                "bytes": 1500
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-HOST-IN"
+                }
+            },
+            "related": {
+                "ip": ["192.168.2.17", "192.168.2.150"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "accept 192.168.2.17:49522 -> 192.168.2.150:443 tcp"
+        },
+        {
+            "@timestamp": "2026-02-15T10:15:40.000Z",
+            "event": {
+                "ingested": ".*",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "denied"],
+                "action": "drop"
+            },
+            "source": {
+                "ip": "172.30.0.1",
+                "port": 5353
+            },
+            "destination": {
+                "ip": "224.0.0.251",
+                "port": 5353
+            },
+            "network": {
+                "transport": "udp",
+                "bytes": 73
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-HOST-OUT"
+                }
+            },
+            "related": {
+                "ip": ["172.30.0.1", "224.0.0.251"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "drop 172.30.0.1:5353 -> 224.0.0.251:5353 udp"
         }
     ]
 }

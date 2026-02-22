@@ -1,3 +1,14 @@
+- version: 0.3.0
+  changes:
+    - description: Restructure dashboards to separate cluster overview from per-node views. Add dedicated Node and Firewall dashboards.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
+    - description: Change VMs dashboard filter from agent.name to proxmox.cluster.resource.node for proper per-node guest filtering.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
+    - description: Remove firewall panels from Security dashboard into dedicated Firewall dashboard.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
 - version: 0.2.0
   changes:
     - description: Add custom CA certificate support for self-signed Proxmox server certificates.

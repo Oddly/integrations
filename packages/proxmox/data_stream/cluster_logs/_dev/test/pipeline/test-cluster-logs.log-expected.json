@@ -38,7 +38,7 @@
                 "product": "Proxmox VE",
                 "type": "virtualization"
             },
-            "message": "A new membership (1.2) was formed. Members joined: 3"
+            "message": "A new membership (1.1d) was formed. Members joined: 2"
         },
         {
             "event": {
@@ -178,6 +178,123 @@
                 "type": "virtualization"
             },
             "message": "quorum gained"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"]
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "TOTEM"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "A new membership (1.21) was formed. Members joined: 3"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"]
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "CFG"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Cluster configuration reloaded."
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"]
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "KNET"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "pmtud: MTU for host 2 link 0 is now 1397 (was 469)"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"],
+                "action": "membership_change"
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "QUORUM",
+                    "members": 1
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Members[1]: 1"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"]
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "TOTEM"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "A processor failed, forming new configuration."
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"],
+                "action": "link_down"
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "KNET"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "host: host: 2 link: 0 is down"
         }
     ]
 }

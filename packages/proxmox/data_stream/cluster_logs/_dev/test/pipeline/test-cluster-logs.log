@@ -1,5 +1,5 @@
 [QUORUM] Members[3]: 1 2 3
-[TOTEM ] A new membership (1.2) was formed. Members joined: 3
+[TOTEM ] A new membership (1.1d) was formed. Members joined: 2
 [QUORUM] This node is within the primary component and will provide service.
 [QUORUM] Members[2]: 1 2
 [KNET  ] host: host: 3 link: 0 is down
@@ -7,3 +7,9 @@
 [MAIN  ] Corosync main process was not scheduled for 2000ms (threshold is 1320ms). Consider token timeout increase.
 [QUORUM] This node has lost quorum. Waiting for quorum to be regained.
 [QUORUM] quorum gained
+[TOTEM ] A new membership (1.21) was formed. Members joined: 3
+[CFG   ] Cluster configuration reloaded.
+[KNET  ] pmtud: MTU for host 2 link 0 is now 1397 (was 469)
+[QUORUM] Members[1]: 1
+[TOTEM ] A processor failed, forming new configuration.
+[KNET  ] host: host: 2 link: 0 is down
