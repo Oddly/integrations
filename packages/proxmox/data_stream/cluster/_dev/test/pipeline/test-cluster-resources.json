@@ -1,0 +1,25 @@
+{
+    "events": [
+        {
+            "message": "{\"type\":\"node\",\"id\":\"node/lab\",\"node\":\"lab\",\"status\":\"online\",\"cpu\":0.0523,\"maxcpu\":16,\"mem\":8589934592,\"maxmem\":67108864000,\"disk\":5368709120,\"maxdisk\":107374182400,\"uptime\":604800,\"cgroup-mode\":2}"
+        },
+        {
+            "message": "{\"type\":\"qemu\",\"id\":\"qemu/100\",\"vmid\":100,\"node\":\"lab\",\"name\":\"k8s-cp1\",\"status\":\"running\",\"cpu\":0.0234,\"maxcpu\":4,\"mem\":4294967296,\"maxmem\":8589934592,\"disk\":0,\"maxdisk\":34359738368,\"netin\":123456789,\"netout\":987654321,\"diskread\":555555555,\"diskwrite\":444444444,\"uptime\":86400,\"template\":0,\"tags\":\"kubernetes;control-plane\"}"
+        },
+        {
+            "message": "{\"type\":\"lxc\",\"id\":\"lxc/304\",\"vmid\":304,\"node\":\"lab\",\"name\":\"logstash\",\"status\":\"running\",\"cpu\":0.005,\"maxcpu\":2,\"mem\":536870912,\"maxmem\":2147483648,\"disk\":2147483648,\"maxdisk\":10737418240,\"netin\":5555555,\"netout\":3333333,\"uptime\":172800,\"template\":0}"
+        },
+        {
+            "message": "{\"type\":\"storage\",\"id\":\"storage/lab/local\",\"node\":\"lab\",\"storage\":\"local\",\"status\":\"available\",\"disk\":5368709120,\"maxdisk\":107374182400,\"plugintype\":\"dir\",\"content\":\"vztmpl,iso,backup\",\"shared\":0}"
+        },
+        {
+            "message": "{\"type\":\"storage\",\"id\":\"storage/lab/local-zfs\",\"node\":\"lab\",\"storage\":\"local-zfs\",\"status\":\"available\",\"disk\":21474836480,\"maxdisk\":214748364800,\"plugintype\":\"zfspool\",\"content\":\"images,rootdir\",\"shared\":0}"
+        },
+        {
+            "message": "{\"type\":\"cluster\",\"name\":\"lab\",\"quorate\":1,\"nodes\":1,\"version\":2}"
+        },
+        {
+            "message": "{\"type\":\"node\",\"name\":\"lab\",\"nodeid\":1,\"online\":1,\"local\":1,\"ip\":\"172.30.1.1\"}"
+        }
+    ]
+}

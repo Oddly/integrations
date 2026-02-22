@@ -1,0 +1,136 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2021-11-10T19:32:11.000Z",
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["process"],
+                "type": ["info"],
+                "action": "vzdump",
+                "outcome": "success",
+                "duration": 230000000000
+            },
+            "proxmox": {
+                "task": {
+                    "node": "lab",
+                    "type": "vzdump",
+                    "vmid": "100",
+                    "upid": "UPID:lab:000AE992:00A21BA7:618C1D55:vzdump:100:root@pam:",
+                    "duration_seconds": 230
+                }
+            },
+            "user": {
+                "name": "root"
+            },
+            "related": {
+                "user": ["root"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Task vzdump on VM 100 completed with status OK"
+        },
+        {
+            "@timestamp": "2021-11-10T19:40:00.000Z",
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["process"],
+                "type": ["info"],
+                "action": "qmstart",
+                "outcome": "success",
+                "duration": 16000000000
+            },
+            "proxmox": {
+                "task": {
+                    "node": "lab",
+                    "type": "qmstart",
+                    "vmid": "101",
+                    "upid": "UPID:lab:000B1234:00B34567:618C2000:qmstart:101:admin@pve:",
+                    "duration_seconds": 16
+                }
+            },
+            "user": {
+                "name": "admin"
+            },
+            "related": {
+                "user": ["admin"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Task qmstart on VM 101 completed with status OK"
+        },
+        {
+            "@timestamp": "2021-11-10T20:48:05.000Z",
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["process"],
+                "type": ["info"],
+                "action": "qmstop",
+                "outcome": "failure",
+                "duration": 5000000000
+            },
+            "proxmox": {
+                "task": {
+                    "node": "lab",
+                    "type": "qmstop",
+                    "vmid": "102",
+                    "upid": "UPID:lab:000C5678:00C78901:618C3000:qmstop:102:root@pam:",
+                    "duration_seconds": 5
+                }
+            },
+            "user": {
+                "name": "root"
+            },
+            "related": {
+                "user": ["root"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Task qmstop on VM 102 completed with status UNKOWN TASK STATUS"
+        },
+        {
+            "@timestamp": "2026-02-19T21:05:34.000Z",
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["process"],
+                "type": ["info"],
+                "action": "vzdestroy",
+                "outcome": "success",
+                "duration": 2000000000
+            },
+            "proxmox": {
+                "task": {
+                    "node": "lab",
+                    "type": "vzdestroy",
+                    "vmid": "105",
+                    "upid": "UPID:lab:0005C545:00292353:69977B1C:vzdestroy:105:root@pam!molecule-ci:",
+                    "duration_seconds": 2
+                }
+            },
+            "user": {
+                "name": "root"
+            },
+            "related": {
+                "user": ["root"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Task vzdestroy on VM 105 completed with status OK"
+        }
+    ]
+}

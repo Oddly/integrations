@@ -1,0 +1,171 @@
+{
+    "expected": [
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "metric",
+                "dataset": "proxmox.cluster",
+                "module": "proxmox"
+            },
+            "proxmox": {
+                "cluster": {
+                    "resource": {
+                        "type": "node",
+                        "id": "node/lab",
+                        "node": "lab",
+                        "status": "online",
+                        "cpu": 0.0523,
+                        "maxcpu": 16,
+                        "mem": 8589934592,
+                        "maxmem": 67108864000,
+                        "disk": 5368709120,
+                        "maxdisk": 107374182400,
+                        "uptime": 604800,
+                        "cgroup_mode": 2
+                    }
+                }
+            }
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "metric",
+                "dataset": "proxmox.cluster",
+                "module": "proxmox"
+            },
+            "proxmox": {
+                "cluster": {
+                    "resource": {
+                        "type": "qemu",
+                        "id": "qemu/100",
+                        "name": "k8s-cp1",
+                        "node": "lab",
+                        "vmid": 100,
+                        "status": "running",
+                        "cpu": 0.0234,
+                        "maxcpu": 4,
+                        "mem": 4294967296,
+                        "maxmem": 8589934592,
+                        "disk": 0,
+                        "maxdisk": 34359738368,
+                        "netin": 123456789,
+                        "netout": 987654321,
+                        "diskread": 555555555,
+                        "diskwrite": 444444444,
+                        "uptime": 86400,
+                        "template": false,
+                        "tags": "kubernetes;control-plane"
+                    }
+                }
+            }
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "metric",
+                "dataset": "proxmox.cluster",
+                "module": "proxmox"
+            },
+            "proxmox": {
+                "cluster": {
+                    "resource": {
+                        "type": "lxc",
+                        "id": "lxc/304",
+                        "name": "logstash",
+                        "node": "lab",
+                        "vmid": 304,
+                        "status": "running",
+                        "cpu": 0.005,
+                        "maxcpu": 2,
+                        "mem": 536870912,
+                        "maxmem": 2147483648,
+                        "disk": 2147483648,
+                        "maxdisk": 10737418240,
+                        "netin": 5555555,
+                        "netout": 3333333,
+                        "uptime": 172800,
+                        "template": false
+                    }
+                }
+            }
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "metric",
+                "dataset": "proxmox.cluster",
+                "module": "proxmox"
+            },
+            "proxmox": {
+                "cluster": {
+                    "resource": {
+                        "type": "storage",
+                        "id": "storage/lab/local",
+                        "node": "lab",
+                        "status": "available",
+                        "disk": 5368709120,
+                        "maxdisk": 107374182400,
+                        "plugintype": "dir",
+                        "content": "vztmpl,iso,backup",
+                        "shared": false
+                    }
+                }
+            }
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "metric",
+                "dataset": "proxmox.cluster",
+                "module": "proxmox"
+            },
+            "proxmox": {
+                "cluster": {
+                    "resource": {
+                        "type": "storage",
+                        "id": "storage/lab/local-zfs",
+                        "node": "lab",
+                        "status": "available",
+                        "disk": 21474836480,
+                        "maxdisk": 214748364800,
+                        "plugintype": "zfspool",
+                        "content": "images,rootdir",
+                        "shared": false
+                    }
+                }
+            }
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "metric",
+                "dataset": "proxmox.cluster",
+                "module": "proxmox"
+            },
+            "proxmox": {
+                "cluster": {
+                    "quorate": true,
+                    "nodes": 1,
+                    "name": "lab"
+                }
+            }
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "metric",
+                "dataset": "proxmox.cluster",
+                "module": "proxmox"
+            },
+            "proxmox": {
+                "cluster": {
+                    "node": {
+                        "name": "lab",
+                        "online": true,
+                        "local": true
+                    }
+                }
+            }
+        }
+    ]
+}

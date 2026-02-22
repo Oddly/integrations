@@ -1,0 +1,51 @@
+interval: {{metrics_interval}}
+resource.url: '{{proxmox_url}}'
+resource.ssl:
+  verification_mode: '{{#if ssl_verification}}full{{else}}none{{/if}}'
+{{#if ssl.certificate_authorities}}
+  certificate_authorities:
+{{#each ssl.certificate_authorities}}
+  - {{this}}
+{{/each}}
+{{/if}}
+state:
+  api_token_id: '{{api_token_id}}'
+  api_token_secret: '{{api_token_secret}}'
+  node_name: '{{node_name}}'
+redact:
+  fields:
+    - api_token_secret
+program: |
+  (
+    request("GET", state.url.trim_right("/") + "/api2/json/nodes/" + state.node_name + "/status").with({
+      "Header": {
+        "Authorization": ["PVEAPIToken=" + state.api_token_id + "=" + state.api_token_secret]
+      }
+    }).do_request().as(resp,
+      resp.StatusCode == 200 ?
+        bytes(resp.Body).decode_json().as(body, {
+          "events": [{"message": body.data.encode_json()}],
+          "url": state.url,
+          "api_token_id": state.api_token_id,
+          "api_token_secret": state.api_token_secret,
+          "node_name": state.node_name,
+        })
+      : {
+          "events": [{"error": {"message": "node/status: HTTP " + string(resp.StatusCode)}}],
+          "url": state.url,
+          "api_token_id": state.api_token_id,
+          "api_token_secret": state.api_token_secret,
+          "node_name": state.node_name,
+        }
+    )
+  )
+{{#if tags}}
+tags:
+{{#each tags as |tag|}}
+  - {{tag}}
+{{/each}}
+{{/if}}
+{{#if processors}}
+processors:
+{{processors}}
+{{/if}}

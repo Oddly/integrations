@@ -1,0 +1,183 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2020-07-01T00:42:13.000+02:00",
+            "event": {
+                "ingested": "2026-02-21T10:05:21.000Z",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "denied"],
+                "action": "drop"
+            },
+            "source": {
+                "ip": "192.168.1.2",
+                "port": 23658
+            },
+            "destination": {
+                "ip": "192.168.1.56",
+                "port": 443
+            },
+            "network": {
+                "transport": "tcp",
+                "bytes": 60
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-HOST-OUT"
+                }
+            },
+            "related": {
+                "ip": ["192.168.1.2", "192.168.1.56"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "drop 192.168.1.2:23658 -> 192.168.1.56:443 tcp"
+        },
+        {
+            "@timestamp": "2020-07-01T00:42:15.000+02:00",
+            "event": {
+                "ingested": "2026-02-21T10:05:21.000Z",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "allowed"],
+                "action": "accept"
+            },
+            "source": {
+                "ip": "10.0.0.1",
+                "port": 443
+            },
+            "destination": {
+                "ip": "10.0.0.2",
+                "port": 54321
+            },
+            "network": {
+                "transport": "tcp",
+                "bytes": 52
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-HOST-IN"
+                }
+            },
+            "related": {
+                "ip": ["10.0.0.1", "10.0.0.2"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "accept 10.0.0.1:443 -> 10.0.0.2:54321 tcp"
+        },
+        {
+            "@timestamp": "2020-07-01T00:42:20.000+02:00",
+            "event": {
+                "ingested": "2026-02-21T10:05:21.000Z",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "denied"],
+                "action": "reject"
+            },
+            "source": {
+                "ip": "10.0.0.5",
+                "port": 8080
+            },
+            "destination": {
+                "ip": "10.0.0.2",
+                "port": 22
+            },
+            "network": {
+                "transport": "tcp",
+                "bytes": 60
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-100-IN",
+                    "vmid": "100"
+                }
+            },
+            "related": {
+                "ip": ["10.0.0.5", "10.0.0.2"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "reject 10.0.0.5:8080 -> 10.0.0.2:22 tcp"
+        },
+        {
+            "@timestamp": "2020-07-01T00:42:22.000+02:00",
+            "event": {
+                "ingested": "2026-02-21T10:05:21.000Z",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "denied"],
+                "action": "drop"
+            },
+            "source": {
+                "ip": "10.0.0.3",
+                "port": 53
+            },
+            "destination": {
+                "ip": "10.0.0.2",
+                "port": 1234
+            },
+            "network": {
+                "transport": "udp",
+                "bytes": 84
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-HOST-IN"
+                }
+            },
+            "related": {
+                "ip": ["10.0.0.3", "10.0.0.2"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "drop 10.0.0.3:53 -> 10.0.0.2:1234 udp"
+        },
+        {
+            "@timestamp": "2020-07-01T00:42:25.000+02:00",
+            "event": {
+                "ingested": "2026-02-21T10:05:21.000Z",
+                "kind": "event",
+                "category": ["network"],
+                "type": ["connection", "denied"],
+                "action": "drop"
+            },
+            "source": {
+                "ip": "10.0.0.4"
+            },
+            "destination": {
+                "ip": "10.0.0.2"
+            },
+            "network": {
+                "transport": "icmp",
+                "bytes": 84
+            },
+            "proxmox": {
+                "firewall": {
+                    "chain": "PVEFW-HOST-IN"
+                }
+            },
+            "related": {
+                "ip": ["10.0.0.4", "10.0.0.2"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "firewall"
+            },
+            "message": "drop 10.0.0.4: -> 10.0.0.2: icmp"
+        }
+    ]
+}

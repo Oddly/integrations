@@ -1,0 +1,220 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2026-02-22T11:56:11.000Z",
+            "event": {
+                "ingested": "2026-02-22T11:56:11.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "192.168.2.17"
+            },
+            "user": {
+                "name": "root"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pam"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 988
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/cluster/resources"
+            },
+            "related": {
+                "ip": ["192.168.2.17"],
+                "user": ["root"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/cluster/resources 200"
+        },
+        {
+            "@timestamp": "2026-02-22T11:55:03.000Z",
+            "event": {
+                "ingested": "2026-02-22T11:55:03.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "127.0.0.1"
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 401
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/cluster/ha/resources"
+            },
+            "related": {
+                "ip": ["127.0.0.1"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/cluster/ha/resources 401"
+        },
+        {
+            "@timestamp": "2026-02-22T10:05:20.000Z",
+            "event": {
+                "ingested": "2026-02-22T10:05:20.000Z",
+                "kind": "event",
+                "category": ["web"],
+                "type": ["access"]
+            },
+            "source": {
+                "ip": "172.30.1.101"
+            },
+            "user": {
+                "name": "csi"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pve",
+                    "token_id": "csi-token"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "GET"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 147
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/nodes/lab/storage/hdd_kubernetes/status"
+            },
+            "related": {
+                "ip": ["172.30.1.101"],
+                "user": ["csi"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "GET /api2/json/nodes/lab/storage/hdd_kubernetes/status 200"
+        },
+        {
+            "@timestamp": "2026-02-22T10:06:01.000Z",
+            "event": {
+                "ingested": "2026-02-22T10:06:01.000Z",
+                "kind": "event",
+                "category": ["authentication"],
+                "type": ["info"],
+                "outcome": "success"
+            },
+            "source": {
+                "ip": "172.30.1.50"
+            },
+            "user": {
+                "name": "admin"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pve"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "POST"
+                },
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "bytes": 579
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/access/ticket"
+            },
+            "related": {
+                "ip": ["172.30.1.50"],
+                "user": ["admin"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "POST /api2/json/access/ticket 200"
+        },
+        {
+            "@timestamp": "2026-02-22T10:06:05.000Z",
+            "event": {
+                "ingested": "2026-02-22T10:06:05.000Z",
+                "kind": "event",
+                "category": ["authentication"],
+                "type": ["info"],
+                "outcome": "failure"
+            },
+            "source": {
+                "ip": "172.30.1.50"
+            },
+            "user": {
+                "name": "admin"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pve"
+                }
+            },
+            "http": {
+                "request": {
+                    "method": "POST"
+                },
+                "response": {
+                    "status_code": 401,
+                    "body": {
+                        "bytes": 105
+                    }
+                },
+                "version": "1.1"
+            },
+            "url": {
+                "path": "/api2/json/access/ticket"
+            },
+            "related": {
+                "ip": ["172.30.1.50"],
+                "user": ["admin"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "POST /api2/json/access/ticket 401"
+        }
+    ]
+}

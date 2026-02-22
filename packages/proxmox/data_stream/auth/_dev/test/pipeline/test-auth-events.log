@@ -1,0 +1,3 @@
+successful auth for user 'root@pam'
+authentication failure; rhost=::ffff:172.30.1.50 user=admin@pve msg=invalid credentials
+successful auth for user 'monitor@pve'

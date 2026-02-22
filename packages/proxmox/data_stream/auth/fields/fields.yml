@@ -1,0 +1,9 @@
+- name: proxmox
+  type: group
+  fields:
+    - name: auth
+      type: group
+      fields:
+        - name: realm
+          type: keyword
+          description: Authentication realm (pam, pve, ldap).

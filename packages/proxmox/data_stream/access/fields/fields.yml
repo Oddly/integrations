@@ -1,0 +1,12 @@
+- name: proxmox
+  type: group
+  fields:
+    - name: auth
+      type: group
+      fields:
+        - name: realm
+          type: keyword
+          description: Authentication realm (pam, pve, ldap).
+        - name: token_id
+          type: keyword
+          description: API token ID if request used token auth.

@@ -1,0 +1,12 @@
+- name: proxmox
+  type: group
+  fields:
+    - name: corosync
+      type: group
+      fields:
+        - name: subsystem
+          type: keyword
+          description: Corosync subsystem (QUORUM, TOTEM, KNET, MAIN).
+        - name: members
+          type: long
+          description: Number of cluster members after a membership change.

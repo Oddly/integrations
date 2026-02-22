@@ -1,0 +1,183 @@
+{
+    "expected": [
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"],
+                "action": "membership_change"
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "QUORUM",
+                    "members": 3
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Members[3]: 1 2 3"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"]
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "TOTEM"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "A new membership (1.2) was formed. Members joined: 3"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"]
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "QUORUM"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "This node is within the primary component and will provide service."
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"],
+                "action": "membership_change"
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "QUORUM",
+                    "members": 2
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Members[2]: 1 2"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"],
+                "action": "link_down"
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "KNET"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "host: host: 3 link: 0 is down"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"],
+                "action": "link_up"
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "KNET"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "host: host: 3 link: 0 is up"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"]
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "MAIN"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Corosync main process was not scheduled for 2000ms (threshold is 1320ms). Consider token timeout increase."
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"],
+                "action": "quorum_lost"
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "QUORUM"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "This node has lost quorum. Waiting for quorum to be regained."
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:00:00.000Z",
+                "kind": "event",
+                "category": ["configuration"],
+                "type": ["info"],
+                "action": "quorum_gained"
+            },
+            "proxmox": {
+                "corosync": {
+                    "subsystem": "QUORUM"
+                }
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "quorum gained"
+        }
+    ]
+}

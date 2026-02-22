@@ -1,0 +1,12 @@
+- name: proxmox
+  type: group
+  fields:
+    - name: firewall
+      type: group
+      fields:
+        - name: vmid
+          type: keyword
+          description: VM or container ID from the firewall chain.
+        - name: chain
+          type: keyword
+          description: Firewall chain name (PVEFW-HOST-IN, PVEFW-HOST-OUT, etc).

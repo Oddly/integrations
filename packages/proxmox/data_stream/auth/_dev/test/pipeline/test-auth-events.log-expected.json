@@ -1,0 +1,87 @@
+{
+    "expected": [
+        {
+            "event": {
+                "ingested": "2026-02-21T10:05:20.000Z",
+                "kind": "event",
+                "category": ["authentication"],
+                "type": ["info"],
+                "outcome": "success"
+            },
+            "user": {
+                "name": "root"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pam"
+                }
+            },
+            "related": {
+                "user": ["root"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Successful authentication for user root@pam"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:05:20.000Z",
+                "kind": "event",
+                "category": ["authentication"],
+                "type": ["info"],
+                "outcome": "failure",
+                "reason": "invalid credentials"
+            },
+            "source": {
+                "ip": "172.30.1.50"
+            },
+            "user": {
+                "name": "admin"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pve"
+                }
+            },
+            "related": {
+                "ip": ["172.30.1.50"],
+                "user": ["admin"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Failed authentication for user admin@pve from 172.30.1.50"
+        },
+        {
+            "event": {
+                "ingested": "2026-02-21T10:05:20.000Z",
+                "kind": "event",
+                "category": ["authentication"],
+                "type": ["info"],
+                "outcome": "success"
+            },
+            "user": {
+                "name": "monitor"
+            },
+            "proxmox": {
+                "auth": {
+                    "realm": "pve"
+                }
+            },
+            "related": {
+                "user": ["monitor"]
+            },
+            "observer": {
+                "vendor": "Proxmox",
+                "product": "Proxmox VE",
+                "type": "virtualization"
+            },
+            "message": "Successful authentication for user monitor@pve"
+        }
+    ]
+}

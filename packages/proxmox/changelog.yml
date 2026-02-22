@@ -1,0 +1,21 @@
+- version: 0.2.0
+  changes:
+    - description: Add custom CA certificate support for self-signed Proxmox server certificates.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
+    - description: Add journald field declarations for auth and cluster_logs data streams.
+      type: bugfix
+      link: https://github.com/elastic/integrations/pull/1
+    - description: Use official Proxmox logo.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
+- version: 0.1.1
+  changes:
+    - description: Fix CEL state forwarding so API credentials persist across evaluation cycles.
+      type: bugfix
+      link: https://github.com/elastic/integrations/pull/1
+- version: 0.1.0
+  changes:
+    - description: Initial release with cluster and node metrics, access logs, firewall logs, auth events, cluster logs, and task history.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
