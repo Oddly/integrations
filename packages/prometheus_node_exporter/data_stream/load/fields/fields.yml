@@ -1,0 +1,52 @@
+- name: prometheus
+  type: group
+  fields:
+    - name: labels.*
+      type: keyword
+      dimension: true
+      description: Prometheus metric labels.
+- name: system
+  type: group
+  fields:
+    - name: load.1
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 100
+      description: System load average over 1 minute.
+    - name: load.5
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 100
+      description: System load average over 5 minutes.
+    - name: load.15
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 100
+      description: System load average over 15 minutes.
+    - name: load.cores
+      type: long
+      metric_type: gauge
+      description: Number of CPU cores. Used to compute normalized load averages.
+    - name: load.norm.1
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 1000
+      unit: percent
+      description: Normalized system load average over 1 minute (load / cores).
+    - name: load.norm.5
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 1000
+      unit: percent
+      description: Normalized system load average over 5 minutes (load / cores).
+    - name: load.norm.15
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 1000
+      unit: percent
+      description: Normalized system load average over 15 minutes (load / cores).
+    - name: uptime.duration.ms
+      type: long
+      metric_type: gauge
+      unit: ms
+      description: System uptime in milliseconds, computed from node_boot_time_seconds.

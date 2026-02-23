@@ -1,0 +1,121 @@
+---
+description: Pipeline for node_exporter socket summary metrics
+processors:
+  - set:
+      tag: set_event_ingested
+      field: event.ingested
+      value: "{{_ingest.timestamp}}"
+  - set:
+      tag: set_event_kind
+      field: event.kind
+      value: metric
+  - set:
+      tag: set_event_module
+      field: event.module
+      value: prometheus_node_exporter
+  - set:
+      tag: set_event_dataset
+      field: event.dataset
+      value: prometheus_node_exporter.socket_summary
+
+  # Map prometheus.labels to ECS fields
+  - set:
+      tag: set_service_address
+      if: ctx.prometheus?.labels?.instance != null
+      field: service.address
+      copy_from: prometheus.labels.instance
+      override: true
+  - remove:
+      tag: remove_instance_label
+      field: prometheus.labels.instance
+      ignore_missing: true
+  - set:
+      tag: set_service_name
+      if: ctx.prometheus?.labels?.job != null
+      field: service.name
+      copy_from: prometheus.labels.job
+      override: true
+  - remove:
+      tag: remove_job_label
+      field: prometheus.labels.job
+      ignore_missing: true
+
+  # --- Socket summary fields ---
+  - rename:
+      tag: rename_sockets_used
+      field: prometheus.metrics.node_sockstat_sockets_used
+      target_field: node_exporter.socket.all.used
+      ignore_missing: true
+  - rename:
+      tag: rename_tcp_alloc
+      field: prometheus.metrics.node_sockstat_TCP_alloc
+      target_field: system.socket.summary.tcp.all.count
+      ignore_missing: true
+  - rename:
+      tag: rename_tcp_established
+      field: prometheus.metrics.node_netstat_Tcp_CurrEstab
+      target_field: system.socket.summary.tcp.all.established
+      ignore_missing: true
+  - rename:
+      tag: rename_tcp_tw
+      field: prometheus.metrics.node_sockstat_TCP_tw
+      target_field: system.socket.summary.tcp.all.time_wait
+      ignore_missing: true
+  - rename:
+      tag: rename_tcp_orphan
+      field: prometheus.metrics.node_sockstat_TCP_orphan
+      target_field: system.socket.summary.tcp.all.orphan
+      ignore_missing: true
+  - rename:
+      tag: rename_tcp_mem
+      field: prometheus.metrics.node_sockstat_TCP_mem_bytes
+      target_field: system.socket.summary.tcp.memory
+      ignore_missing: true
+  - rename:
+      tag: rename_tcp_inuse
+      field: prometheus.metrics.node_sockstat_TCP_inuse
+      target_field: node_exporter.socket.tcp.inuse
+      ignore_missing: true
+  - rename:
+      tag: rename_udp_inuse
+      field: prometheus.metrics.node_sockstat_UDP_inuse
+      target_field: system.socket.summary.udp.all.count
+      ignore_missing: true
+  - rename:
+      tag: rename_udp_mem
+      field: prometheus.metrics.node_sockstat_UDP_mem_bytes
+      target_field: system.socket.summary.udp.memory
+      ignore_missing: true
+
+  # Compute all.count = tcp + udp to match system integration semantics
+  - script:
+      tag: compute_all_count
+      lang: painless
+      if: ctx.system?.socket?.summary?.tcp?.all?.count != null || ctx.system?.socket?.summary?.udp?.all?.count != null
+      source: >-
+        long tcp = 0;
+        long udp = 0;
+        if (ctx.system?.socket?.summary?.tcp?.all?.count != null) {
+          tcp = (long)ctx.system.socket.summary.tcp.all.count;
+        }
+        if (ctx.system?.socket?.summary?.udp?.all?.count != null) {
+          udp = (long)ctx.system.socket.summary.udp.all.count;
+        }
+        if (ctx.system.socket.summary.containsKey('all') == false) {
+          ctx.system.socket.summary.put('all', new HashMap());
+        }
+        ctx.system.socket.summary.all.count = tcp + udp;
+
+  # Drop remaining prometheus metrics
+  - remove:
+      tag: remove_prometheus_metrics
+      field: prometheus.metrics
+      ignore_missing: true
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} failed with message {{ _ingest.on_failure_message }}"

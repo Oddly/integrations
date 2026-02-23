@@ -1,0 +1,71 @@
+{
+    "@timestamp": "2026-02-22T12:00:00.000Z",
+    "data_stream": {
+        "type": "metrics",
+        "dataset": "prometheus_node_exporter.diskstats",
+        "namespace": "default"
+    },
+    "event": {
+        "kind": "metric",
+        "module": "prometheus_node_exporter",
+        "dataset": "prometheus_node_exporter.diskstats"
+    },
+    "system": {
+        "diskio": {
+            "name": "sda",
+            "read": {
+                "count": 20287,
+                "bytes": 1254116352,
+                "time": 6364
+            },
+            "write": {
+                "count": 5432100,
+                "bytes": 98765432320,
+                "time": 1802690
+            },
+            "io": {
+                "time": 1023604
+            },
+            "iostat": {
+                "read": {
+                    "request_per_sec": 0.5,
+                    "per_sec_bytes": 25600.0,
+                    "await": 4.0
+                },
+                "write": {
+                    "request_per_sec": 120.3,
+                    "per_sec_bytes": 5242880.0,
+                    "await": 1.247
+                },
+                "await": 1.258,
+                "service_time": 0.662,
+                "busy": 8.0
+            }
+        }
+    },
+    "node_exporter": {
+        "diskio": {
+            "name": "sda",
+            "read": {
+                "count": 20287,
+                "bytes": 1254116352,
+                "time_seconds": 6.364
+            },
+            "write": {
+                "count": 5432100,
+                "bytes": 98765432320,
+                "time_seconds": 1802.69
+            },
+            "io": {
+                "time_seconds": 1023.604
+            }
+        }
+    },
+    "service": {
+        "address": "localhost:9100",
+        "name": "node"
+    },
+    "host": {
+        "name": "myhost"
+    }
+}

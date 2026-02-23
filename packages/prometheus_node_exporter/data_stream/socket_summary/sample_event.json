@@ -1,0 +1,54 @@
+{
+    "@timestamp": "2026-02-22T12:00:00.000Z",
+    "data_stream": {
+        "type": "metrics",
+        "dataset": "prometheus_node_exporter.socket_summary",
+        "namespace": "default"
+    },
+    "event": {
+        "kind": "metric",
+        "module": "prometheus_node_exporter",
+        "dataset": "prometheus_node_exporter.socket_summary"
+    },
+    "system": {
+        "socket": {
+            "summary": {
+                "all": {
+                    "count": 106
+                },
+                "tcp": {
+                    "all": {
+                        "count": 98,
+                        "established": 42,
+                        "time_wait": 12,
+                        "orphan": 0
+                    },
+                    "memory": 40960
+                },
+                "udp": {
+                    "all": {
+                        "count": 8
+                    },
+                    "memory": 8192
+                }
+            }
+        }
+    },
+    "node_exporter": {
+        "socket": {
+            "tcp": {
+                "inuse": 56
+            },
+            "all": {
+                "used": 487
+            }
+        }
+    },
+    "service": {
+        "address": "localhost:9100",
+        "name": "node"
+    },
+    "host": {
+        "name": "myhost"
+    }
+}

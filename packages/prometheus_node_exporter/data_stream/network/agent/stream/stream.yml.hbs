@@ -1,0 +1,34 @@
+metricsets: ["collector"]
+hosts:
+{{#each hosts}}
+  - {{this}}
+{{/each}}
+period: {{period}}
+timeout: {{timeout}}
+metrics_path: {{metrics_path}}
+metrics_filters:
+  include:
+    - "node_network_receive_bytes_total"
+    - "node_network_transmit_bytes_total"
+    - "node_network_receive_packets_total"
+    - "node_network_transmit_packets_total"
+    - "node_network_receive_errs_total"
+    - "node_network_transmit_errs_total"
+    - "node_network_receive_drop_total"
+    - "node_network_transmit_drop_total"
+{{#if username}}
+username: {{username}}
+{{/if}}
+{{#if password}}
+password: {{password}}
+{{/if}}
+{{#if tags}}
+tags:
+{{#each tags as |tag|}}
+  - {{tag}}
+{{/each}}
+{{/if}}
+{{#if processors}}
+processors:
+{{processors}}
+{{/if}}

@@ -1,0 +1,36 @@
+{
+    "@timestamp": "2026-02-22T12:00:00.000Z",
+    "data_stream": {
+        "type": "metrics",
+        "dataset": "prometheus_node_exporter.process_summary",
+        "namespace": "default"
+    },
+    "event": {
+        "kind": "metric",
+        "module": "prometheus_node_exporter",
+        "dataset": "prometheus_node_exporter.process_summary"
+    },
+    "system": {
+        "process": {
+            "summary": {
+                "total": 312,
+                "running": 2,
+                "threads": {
+                    "blocked": 0
+                }
+            }
+        }
+    },
+    "node_exporter": {
+        "process": {
+            "threads": 1547
+        }
+    },
+    "service": {
+        "address": "localhost:9100",
+        "name": "node"
+    },
+    "host": {
+        "name": "myhost"
+    }
+}

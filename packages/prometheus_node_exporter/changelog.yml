@@ -1,0 +1,33 @@
+- version: "0.6.0"
+  changes:
+    - description: Add process_summary and socket_summary data streams.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/99999
+    - description: Remove core, cpu_summary, and fsstat data streams that used system/metrics input.
+      type: breaking-change
+      link: https://github.com/elastic/integrations/pull/99999
+- version: "0.5.0"
+  changes:
+    - description: Fix load field types, add normalized load, uptime, close field gaps.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/99999
+- version: "0.4.0"
+  changes:
+    - description: Fix use_types and rate_counters as proper vars for diskstats iostat.
+      type: bugfix
+      link: https://github.com/elastic/integrations/pull/99999
+- version: "0.3.0"
+  changes:
+    - description: Add cpu_summary, fsstat data streams, memory.cached, diskio.iostat.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/99999
+- version: "0.2.0"
+  changes:
+    - description: Add per-core CPU data stream, .pct fields, remove invented io.ops.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/99999
+- version: "0.1.0"
+  changes:
+    - description: Initial release with load, cpu, memory, and filesystem data streams.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/99999

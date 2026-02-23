@@ -1,0 +1,33 @@
+metricsets: ["collector"]
+hosts:
+{{#each hosts}}
+  - {{this}}
+{{/each}}
+period: {{period}}
+timeout: {{timeout}}
+metrics_path: {{metrics_path}}
+metrics_filters:
+  include:
+    - "node_filesystem_size_bytes"
+    - "node_filesystem_free_bytes"
+    - "node_filesystem_avail_bytes"
+    - "node_filesystem_files"
+    - "node_filesystem_files_free"
+    - "node_filesystem_readonly"
+    - "node_filesystem_device_error"
+{{#if username}}
+username: {{username}}
+{{/if}}
+{{#if password}}
+password: {{password}}
+{{/if}}
+{{#if tags}}
+tags:
+{{#each tags as |tag|}}
+  - {{tag}}
+{{/each}}
+{{/if}}
+{{#if processors}}
+processors:
+{{processors}}
+{{/if}}

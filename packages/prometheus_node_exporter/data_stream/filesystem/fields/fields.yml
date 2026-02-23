@@ -1,0 +1,104 @@
+- name: prometheus
+  type: group
+  fields:
+    - name: labels.*
+      type: keyword
+      dimension: true
+      description: Prometheus metric labels.
+# --- System-compatible filesystem fields ---
+- name: system.filesystem
+  type: group
+  fields:
+    - name: device_name
+      type: keyword
+      dimension: true
+      description: Filesystem device name.
+    - name: type
+      type: keyword
+      description: Filesystem type (ext4, xfs, tmpfs, etc.).
+    - name: mount_point
+      type: keyword
+      dimension: true
+      description: Filesystem mount point.
+    - name: total
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total filesystem size in bytes.
+    - name: free
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free space in bytes (including reserved blocks).
+    - name: available
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Available space in bytes (for unprivileged users).
+    - name: used.bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Used space in bytes (total - free).
+    - name: used.pct
+      type: scaled_float
+      metric_type: gauge
+      unit: percent
+      description: The percentage of used disk space (used.bytes / total).
+    - name: files
+      type: long
+      metric_type: gauge
+      description: Total number of inodes.
+    - name: free_files
+      type: long
+      metric_type: gauge
+      description: Number of free inodes.
+# --- All node_exporter filesystem fields ---
+- name: node_exporter.filesystem
+  type: group
+  fields:
+    - name: device
+      type: keyword
+      description: Filesystem device name.
+    - name: type
+      type: keyword
+      description: Filesystem type (ext4, xfs, tmpfs, etc.).
+    - name: mount_point
+      type: keyword
+      description: Filesystem mount point.
+    - name: size_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total filesystem size in bytes.
+    - name: free_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free space in bytes (including reserved blocks).
+    - name: available_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Available space in bytes (for unprivileged users).
+    - name: used_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Used space in bytes (size - free).
+    - name: files
+      type: long
+      metric_type: gauge
+      description: Total number of inodes.
+    - name: files_free
+      type: long
+      metric_type: gauge
+      description: Number of free inodes.
+    - name: readonly
+      type: double
+      metric_type: gauge
+      description: Whether the filesystem is mounted read-only (1 = readonly, 0 = readwrite).
+    - name: device_error
+      type: double
+      metric_type: gauge
+      description: Whether a device error occurred while getting stats (1 = error, 0 = ok).

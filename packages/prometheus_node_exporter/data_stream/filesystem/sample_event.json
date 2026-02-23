@@ -1,0 +1,51 @@
+{
+    "@timestamp": "2026-02-22T12:00:00.000Z",
+    "data_stream": {
+        "type": "metrics",
+        "dataset": "prometheus_node_exporter.filesystem",
+        "namespace": "default"
+    },
+    "event": {
+        "kind": "metric",
+        "module": "prometheus_node_exporter",
+        "dataset": "prometheus_node_exporter.filesystem"
+    },
+    "system": {
+        "filesystem": {
+            "device_name": "/dev/sda1",
+            "type": "ext4",
+            "mount_point": "/",
+            "total": 107374182400,
+            "free": 53687091200,
+            "available": 48318382080,
+            "used": {
+                "bytes": 53687091200,
+                "pct": 0.5
+            },
+            "files": 6553600,
+            "free_files": 6000000
+        }
+    },
+    "node_exporter": {
+        "filesystem": {
+            "device": "/dev/sda1",
+            "type": "ext4",
+            "mount_point": "/",
+            "size_bytes": 107374182400,
+            "free_bytes": 53687091200,
+            "available_bytes": 48318382080,
+            "used_bytes": 53687091200,
+            "files": 6553600,
+            "files_free": 6000000,
+            "readonly": 0,
+            "device_error": 0
+        }
+    },
+    "service": {
+        "address": "localhost:9100",
+        "name": "node"
+    },
+    "host": {
+        "name": "myhost"
+    }
+}

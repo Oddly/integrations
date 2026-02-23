@@ -1,0 +1,28 @@
+- name: prometheus
+  type: group
+  fields:
+    - name: labels.*
+      type: keyword
+      dimension: true
+      description: Prometheus metric labels.
+- name: node_exporter.cpu
+  type: group
+  fields:
+    - name: id
+      type: keyword
+      dimension: true
+      description: CPU core identifier (from Prometheus cpu label).
+    - name: mode
+      type: keyword
+      dimension: true
+      description: CPU mode (user, system, idle, iowait, irq, softirq, steal, nice, guest, guest_nice).
+    - name: seconds.total
+      type: double
+      metric_type: counter
+      unit: s
+      description: Total seconds the CPU has spent in this mode (counter).
+    - name: guest_seconds.total
+      type: double
+      metric_type: counter
+      unit: s
+      description: Total seconds spent running a virtual CPU for guest operating systems (counter).

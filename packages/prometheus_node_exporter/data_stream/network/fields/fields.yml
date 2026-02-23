@@ -1,0 +1,90 @@
+- name: prometheus
+  type: group
+  fields:
+    - name: labels.*
+      type: keyword
+      dimension: true
+      description: Prometheus metric labels.
+# --- System-compatible network fields ---
+- name: system.network
+  type: group
+  fields:
+    - name: name
+      type: keyword
+      dimension: true
+      description: Network interface name.
+    - name: in.bytes
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes received.
+    - name: out.bytes
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes transmitted.
+    - name: in.packets
+      type: long
+      metric_type: counter
+      description: Total packets received.
+    - name: out.packets
+      type: long
+      metric_type: counter
+      description: Total packets transmitted.
+    - name: in.errors
+      type: long
+      metric_type: counter
+      description: Total receive errors.
+    - name: out.errors
+      type: long
+      metric_type: counter
+      description: Total transmit errors.
+    - name: in.dropped
+      type: long
+      metric_type: counter
+      description: Total incoming packets dropped.
+    - name: out.dropped
+      type: long
+      metric_type: counter
+      description: Total outgoing packets dropped.
+# --- All node_exporter network fields ---
+- name: node_exporter.network
+  type: group
+  fields:
+    - name: name
+      type: keyword
+      description: Network interface name.
+    - name: in.bytes
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes received.
+    - name: out.bytes
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes transmitted.
+    - name: in.packets
+      type: long
+      metric_type: counter
+      description: Total packets received.
+    - name: out.packets
+      type: long
+      metric_type: counter
+      description: Total packets transmitted.
+    - name: in.errors
+      type: long
+      metric_type: counter
+      description: Total receive errors.
+    - name: out.errors
+      type: long
+      metric_type: counter
+      description: Total transmit errors.
+    - name: in.dropped
+      type: long
+      metric_type: counter
+      description: Total incoming packets dropped.
+    - name: out.dropped
+      type: long
+      metric_type: counter
+      description: Total outgoing packets dropped.

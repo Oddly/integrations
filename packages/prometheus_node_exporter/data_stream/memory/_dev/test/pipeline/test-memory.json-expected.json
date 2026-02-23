@@ -1,0 +1,82 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2026-02-22T12:00:00.000Z",
+            "event": {
+                "ingested": "2026-02-22T12:00:00.000Z",
+                "kind": "metric",
+                "module": "prometheus_node_exporter",
+                "dataset": "prometheus_node_exporter.memory"
+            },
+            "system": {
+                "memory": {
+                    "total": 16694882304,
+                    "free": 1073741824,
+                    "cached": 6442450944,
+                    "used": {
+                        "bytes": 15621140480,
+                        "pct": 0.9356843729444719
+                    },
+                    "actual": {
+                        "free": 8589934592,
+                        "used": {
+                            "bytes": 8104947712,
+                            "pct": 0.48547498355577506
+                        }
+                    },
+                    "swap": {
+                        "total": 8589934592,
+                        "free": 8589934592,
+                        "used": {
+                            "bytes": 0,
+                            "pct": 0.0
+                        }
+                    }
+                }
+            },
+            "node_exporter": {
+                "memory": {
+                    "total_bytes": 16694882304,
+                    "free_bytes": 1073741824,
+                    "available_bytes": 8589934592,
+                    "swap": {
+                        "total_bytes": 8589934592,
+                        "free_bytes": 8589934592,
+                        "cached_bytes": 0
+                    },
+                    "buffers_bytes": 268435456,
+                    "cached_bytes": 6442450944,
+                    "active_bytes": 5368709120,
+                    "inactive_bytes": 8589934592,
+                    "active_anon_bytes": 3221225472,
+                    "inactive_anon_bytes": 1073741824,
+                    "active_file_bytes": 2147483648,
+                    "inactive_file_bytes": 7516192768,
+                    "slab_bytes": 536870912,
+                    "sreclaimable_bytes": 402653184,
+                    "sunreclaim_bytes": 134217728,
+                    "mapped_bytes": 805306368,
+                    "shmem_bytes": 67108864,
+                    "commit_limit_bytes": 16962150400,
+                    "committed_as_bytes": 12884901888,
+                    "page_tables_bytes": 67108864,
+                    "writeback_tmp_bytes": 0,
+                    "writeback_bytes": 0,
+                    "dirty_bytes": 1048576,
+                    "hugepages": {
+                        "total": 0,
+                        "free": 0
+                    },
+                    "hugepagesize_bytes": 2097152
+                }
+            },
+            "service": {
+                "address": "localhost:9100",
+                "name": "node"
+            },
+            "prometheus": {
+                "labels": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,123 @@
+- name: prometheus
+  type: group
+  fields:
+    - name: labels.*
+      type: keyword
+      dimension: true
+      description: Prometheus metric labels.
+# --- System-compatible disk I/O fields ---
+- name: system.diskio
+  type: group
+  fields:
+    - name: name
+      type: keyword
+      dimension: true
+      description: Disk device name.
+    - name: read.count
+      type: long
+      metric_type: counter
+      description: Total completed read operations.
+    - name: write.count
+      type: long
+      metric_type: counter
+      description: Total completed write operations.
+    - name: read.bytes
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes read.
+    - name: write.bytes
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes written.
+    - name: read.time
+      type: long
+      metric_type: counter
+      description: Total time spent reading in milliseconds.
+    - name: write.time
+      type: long
+      metric_type: counter
+      description: Total time spent writing in milliseconds.
+    - name: io.time
+      type: long
+      metric_type: counter
+      description: Total time spent doing I/O in milliseconds.
+    - name: iostat.read.request_per_sec
+      type: double
+      metric_type: gauge
+      description: Read requests per second.
+    - name: iostat.write.request_per_sec
+      type: double
+      metric_type: gauge
+      description: Write requests per second.
+    - name: iostat.read.per_sec_bytes
+      type: double
+      metric_type: gauge
+      unit: byte
+      description: Bytes read per second.
+    - name: iostat.write.per_sec_bytes
+      type: double
+      metric_type: gauge
+      unit: byte
+      description: Bytes written per second.
+    - name: iostat.read.await
+      type: double
+      metric_type: gauge
+      description: Average time for read requests in milliseconds.
+    - name: iostat.write.await
+      type: double
+      metric_type: gauge
+      description: Average time for write requests in milliseconds.
+    - name: iostat.await
+      type: double
+      metric_type: gauge
+      description: Average time for I/O requests in milliseconds.
+    - name: iostat.service_time
+      type: double
+      metric_type: gauge
+      description: Average service time for I/O requests in milliseconds.
+    - name: iostat.busy
+      type: double
+      metric_type: gauge
+      description: Percentage of time the device was busy with I/O operations.
+# --- All node_exporter disk I/O fields ---
+- name: node_exporter.diskio
+  type: group
+  fields:
+    - name: name
+      type: keyword
+      description: Disk device name.
+    - name: read.count
+      type: long
+      metric_type: counter
+      description: Total completed read operations.
+    - name: write.count
+      type: long
+      metric_type: counter
+      description: Total completed write operations.
+    - name: read.bytes
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes read.
+    - name: write.bytes
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes written.
+    - name: read.time_seconds
+      type: double
+      metric_type: counter
+      unit: s
+      description: Total time spent reading in seconds (native node_exporter unit).
+    - name: write.time_seconds
+      type: double
+      metric_type: counter
+      unit: s
+      description: Total time spent writing in seconds (native node_exporter unit).
+    - name: io.time_seconds
+      type: double
+      metric_type: counter
+      unit: s
+      description: Total time spent doing I/O in seconds (native node_exporter unit).

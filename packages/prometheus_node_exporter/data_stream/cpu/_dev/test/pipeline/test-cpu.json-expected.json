@@ -1,0 +1,60 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2026-02-22T12:00:00.000Z",
+            "event": {
+                "ingested": "2026-02-22T12:00:00.000Z",
+                "kind": "metric",
+                "module": "prometheus_node_exporter",
+                "dataset": "prometheus_node_exporter.cpu"
+            },
+            "node_exporter": {
+                "cpu": {
+                    "id": "0",
+                    "mode": "user",
+                    "seconds": {
+                        "total": 1234.56
+                    },
+                    "guest_seconds": {
+                        "total": 0
+                    }
+                }
+            },
+            "service": {
+                "address": "localhost:9100",
+                "name": "node"
+            },
+            "prometheus": {
+                "labels": {}
+            }
+        },
+        {
+            "@timestamp": "2026-02-22T12:00:00.000Z",
+            "event": {
+                "ingested": "2026-02-22T12:00:00.000Z",
+                "kind": "metric",
+                "module": "prometheus_node_exporter",
+                "dataset": "prometheus_node_exporter.cpu"
+            },
+            "node_exporter": {
+                "cpu": {
+                    "id": "0",
+                    "mode": "idle",
+                    "seconds": {
+                        "total": 5678.90
+                    },
+                    "guest_seconds": {
+                        "total": 0
+                    }
+                }
+            },
+            "service": {
+                "address": "localhost:9100",
+                "name": "node"
+            },
+            "prometheus": {
+                "labels": {}
+            }
+        }
+    ]
+}

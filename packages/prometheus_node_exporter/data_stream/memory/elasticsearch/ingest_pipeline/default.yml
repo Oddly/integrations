@@ -1,0 +1,257 @@
+---
+description: Pipeline for node_exporter memory metrics
+processors:
+  - set:
+      tag: set_event_ingested
+      field: event.ingested
+      value: "{{_ingest.timestamp}}"
+  - set:
+      tag: set_event_kind
+      field: event.kind
+      value: metric
+  - set:
+      tag: set_event_module
+      field: event.module
+      value: prometheus_node_exporter
+  - set:
+      tag: set_event_dataset
+      field: event.dataset
+      value: prometheus_node_exporter.memory
+
+  # Map prometheus.labels to ECS fields
+  - set:
+      tag: set_service_address
+      if: ctx.prometheus?.labels?.instance != null
+      field: service.address
+      copy_from: prometheus.labels.instance
+      override: true
+  - remove:
+      tag: remove_instance_label
+      field: prometheus.labels.instance
+      ignore_missing: true
+  - set:
+      tag: set_service_name
+      if: ctx.prometheus?.labels?.job != null
+      field: service.name
+      copy_from: prometheus.labels.job
+      override: true
+  - remove:
+      tag: remove_job_label
+      field: prometheus.labels.job
+      ignore_missing: true
+
+  # --- Memory fields: node.* (native) + system.* (System integration compat) ---
+  - set:
+      tag: set_node_mem_total
+      if: ctx.prometheus?.metrics?.node_memory_MemTotal_bytes != null
+      field: node_exporter.memory.total_bytes
+      copy_from: prometheus.metrics.node_memory_MemTotal_bytes
+  - rename:
+      tag: rename_mem_total
+      field: prometheus.metrics.node_memory_MemTotal_bytes
+      target_field: system.memory.total
+      ignore_missing: true
+  - set:
+      tag: set_node_mem_free
+      if: ctx.prometheus?.metrics?.node_memory_MemFree_bytes != null
+      field: node_exporter.memory.free_bytes
+      copy_from: prometheus.metrics.node_memory_MemFree_bytes
+  - rename:
+      tag: rename_mem_free
+      field: prometheus.metrics.node_memory_MemFree_bytes
+      target_field: system.memory.free
+      ignore_missing: true
+  - set:
+      tag: set_node_mem_available
+      if: ctx.prometheus?.metrics?.node_memory_MemAvailable_bytes != null
+      field: node_exporter.memory.available_bytes
+      copy_from: prometheus.metrics.node_memory_MemAvailable_bytes
+  - rename:
+      tag: rename_mem_available
+      field: prometheus.metrics.node_memory_MemAvailable_bytes
+      target_field: system.memory.actual.free
+      ignore_missing: true
+  - set:
+      tag: set_node_swap_total
+      if: ctx.prometheus?.metrics?.node_memory_SwapTotal_bytes != null
+      field: node_exporter.memory.swap.total_bytes
+      copy_from: prometheus.metrics.node_memory_SwapTotal_bytes
+  - rename:
+      tag: rename_swap_total
+      field: prometheus.metrics.node_memory_SwapTotal_bytes
+      target_field: system.memory.swap.total
+      ignore_missing: true
+  - set:
+      tag: set_node_swap_free
+      if: ctx.prometheus?.metrics?.node_memory_SwapFree_bytes != null
+      field: node_exporter.memory.swap.free_bytes
+      copy_from: prometheus.metrics.node_memory_SwapFree_bytes
+  - rename:
+      tag: rename_swap_free
+      field: prometheus.metrics.node_memory_SwapFree_bytes
+      target_field: system.memory.swap.free
+      ignore_missing: true
+
+  # --- Extra memory fields (node_exporter.memory.* namespace + system.memory.cached) ---
+  - rename:
+      tag: rename_mem_buffers
+      field: prometheus.metrics.node_memory_Buffers_bytes
+      target_field: node_exporter.memory.buffers_bytes
+      ignore_missing: true
+  - set:
+      tag: set_system_memory_cached
+      if: ctx.prometheus?.metrics?.node_memory_Cached_bytes != null
+      field: system.memory.cached
+      copy_from: prometheus.metrics.node_memory_Cached_bytes
+  - rename:
+      tag: rename_mem_cached
+      field: prometheus.metrics.node_memory_Cached_bytes
+      target_field: node_exporter.memory.cached_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_swap_cached
+      field: prometheus.metrics.node_memory_SwapCached_bytes
+      target_field: node_exporter.memory.swap.cached_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_active
+      field: prometheus.metrics.node_memory_Active_bytes
+      target_field: node_exporter.memory.active_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_inactive
+      field: prometheus.metrics.node_memory_Inactive_bytes
+      target_field: node_exporter.memory.inactive_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_active_anon
+      field: prometheus.metrics.node_memory_Active_anon_bytes
+      target_field: node_exporter.memory.active_anon_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_inactive_anon
+      field: prometheus.metrics.node_memory_Inactive_anon_bytes
+      target_field: node_exporter.memory.inactive_anon_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_active_file
+      field: prometheus.metrics.node_memory_Active_file_bytes
+      target_field: node_exporter.memory.active_file_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_inactive_file
+      field: prometheus.metrics.node_memory_Inactive_file_bytes
+      target_field: node_exporter.memory.inactive_file_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_slab
+      field: prometheus.metrics.node_memory_Slab_bytes
+      target_field: node_exporter.memory.slab_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_sreclaimable
+      field: prometheus.metrics.node_memory_SReclaimable_bytes
+      target_field: node_exporter.memory.sreclaimable_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_sunreclaim
+      field: prometheus.metrics.node_memory_SUnreclaim_bytes
+      target_field: node_exporter.memory.sunreclaim_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_mapped
+      field: prometheus.metrics.node_memory_Mapped_bytes
+      target_field: node_exporter.memory.mapped_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_shmem
+      field: prometheus.metrics.node_memory_Shmem_bytes
+      target_field: node_exporter.memory.shmem_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_commit_limit
+      field: prometheus.metrics.node_memory_CommitLimit_bytes
+      target_field: node_exporter.memory.commit_limit_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_committed_as
+      field: prometheus.metrics.node_memory_Committed_AS_bytes
+      target_field: node_exporter.memory.committed_as_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_page_tables
+      field: prometheus.metrics.node_memory_PageTables_bytes
+      target_field: node_exporter.memory.page_tables_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_writeback_tmp
+      field: prometheus.metrics.node_memory_WritebackTmp_bytes
+      target_field: node_exporter.memory.writeback_tmp_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_writeback
+      field: prometheus.metrics.node_memory_Writeback_bytes
+      target_field: node_exporter.memory.writeback_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_mem_dirty
+      field: prometheus.metrics.node_memory_Dirty_bytes
+      target_field: node_exporter.memory.dirty_bytes
+      ignore_missing: true
+  - rename:
+      tag: rename_hugepages_total
+      field: prometheus.metrics.node_memory_HugePages_Total
+      target_field: node_exporter.memory.hugepages.total
+      ignore_missing: true
+  - rename:
+      tag: rename_hugepages_free
+      field: prometheus.metrics.node_memory_HugePages_Free
+      target_field: node_exporter.memory.hugepages.free
+      ignore_missing: true
+  - rename:
+      tag: rename_hugepagesize
+      field: prometheus.metrics.node_memory_Hugepagesize_bytes
+      target_field: node_exporter.memory.hugepagesize_bytes
+      ignore_missing: true
+
+  # Compute system-compatible derived fields
+  - script:
+      tag: compute_memory_derived
+      lang: painless
+      if: ctx.system?.memory?.total != null
+      source: >-
+        def mem = ctx.system.memory;
+        def total = mem.total;
+        if (mem.free != null) {
+          long usedBytes = (long)(total - mem.free);
+          mem.put('used', new HashMap());
+          mem.used.bytes = usedBytes;
+          if (total > 0) { mem.used.pct = (double)usedBytes / total; }
+        }
+        if (mem.containsKey('actual') && mem.actual.free != null) {
+          long actualUsedBytes = (long)(total - mem.actual.free);
+          mem.actual.put('used', new HashMap());
+          mem.actual.used.bytes = actualUsedBytes;
+          if (total > 0) { mem.actual.used.pct = (double)actualUsedBytes / total; }
+        }
+        def swap = mem.get('swap');
+        if (swap != null && swap.total != null && swap.free != null) {
+          long swapUsedBytes = (long)(swap.total - swap.free);
+          swap.put('used', new HashMap());
+          swap.used.bytes = swapUsedBytes;
+          if (swap.total > 0) { swap.used.pct = (double)swapUsedBytes / swap.total; }
+        }
+
+  # Drop remaining prometheus metrics
+  - remove:
+      tag: remove_prometheus_metrics
+      field: prometheus.metrics
+      ignore_missing: true
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} failed with message {{ _ingest.on_failure_message }}"

@@ -1,0 +1,67 @@
+{
+    "@timestamp": "2026-02-22T12:00:00.000Z",
+    "data_stream": {
+        "type": "metrics",
+        "dataset": "prometheus_node_exporter.memory",
+        "namespace": "default"
+    },
+    "event": {
+        "kind": "metric",
+        "module": "prometheus_node_exporter",
+        "dataset": "prometheus_node_exporter.memory"
+    },
+    "system": {
+        "memory": {
+            "total": 16694882304,
+            "free": 1073741824,
+            "cached": 6442450944,
+            "used": {
+                "bytes": 15621140480,
+                "pct": 0.9357
+            },
+            "actual": {
+                "free": 8589934592,
+                "used": {
+                    "bytes": 8104947712,
+                    "pct": 0.4855
+                }
+            },
+            "swap": {
+                "total": 8589934592,
+                "free": 8589934592,
+                "used": {
+                    "bytes": 0,
+                    "pct": 0.0
+                }
+            }
+        }
+    },
+    "node_exporter": {
+        "memory": {
+            "total_bytes": 16694882304,
+            "free_bytes": 1073741824,
+            "available_bytes": 8589934592,
+            "swap": {
+                "total_bytes": 8589934592,
+                "free_bytes": 8589934592
+            },
+            "buffers_bytes": 268435456,
+            "cached_bytes": 6442450944,
+            "active_bytes": 5368709120,
+            "inactive_bytes": 8589934592,
+            "slab_bytes": 536870912,
+            "dirty_bytes": 1048576,
+            "hugepages": {
+                "total": 0,
+                "free": 0
+            }
+        }
+    },
+    "service": {
+        "address": "localhost:9100",
+        "name": "node"
+    },
+    "host": {
+        "name": "myhost"
+    }
+}

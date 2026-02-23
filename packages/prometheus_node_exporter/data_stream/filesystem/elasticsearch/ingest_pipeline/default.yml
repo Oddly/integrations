@@ -1,0 +1,188 @@
+---
+description: Pipeline for node_exporter filesystem metrics
+processors:
+  - set:
+      tag: set_event_ingested
+      field: event.ingested
+      value: "{{_ingest.timestamp}}"
+  - set:
+      tag: set_event_kind
+      field: event.kind
+      value: metric
+  - set:
+      tag: set_event_module
+      field: event.module
+      value: prometheus_node_exporter
+  - set:
+      tag: set_event_dataset
+      field: event.dataset
+      value: prometheus_node_exporter.filesystem
+
+  # Map prometheus.labels to ECS fields
+  - set:
+      tag: set_service_address
+      if: ctx.prometheus?.labels?.instance != null
+      field: service.address
+      copy_from: prometheus.labels.instance
+      override: true
+  - remove:
+      tag: remove_instance_label
+      field: prometheus.labels.instance
+      ignore_missing: true
+  - set:
+      tag: set_service_name
+      if: ctx.prometheus?.labels?.job != null
+      field: service.name
+      copy_from: prometheus.labels.job
+      override: true
+  - remove:
+      tag: remove_job_label
+      field: prometheus.labels.job
+      ignore_missing: true
+
+  # Rename collector-specific labels to node.* + system.* dimension fields
+  - set:
+      tag: set_node_fs_device
+      if: ctx.prometheus?.labels?.device != null
+      field: node_exporter.filesystem.device
+      copy_from: prometheus.labels.device
+  - set:
+      tag: set_fs_device_name
+      if: ctx.prometheus?.labels?.device != null
+      field: system.filesystem.device_name
+      copy_from: prometheus.labels.device
+      override: true
+  - remove:
+      tag: remove_device_label
+      field: prometheus.labels.device
+      ignore_missing: true
+  - set:
+      tag: set_node_fs_type
+      if: ctx.prometheus?.labels?.fstype != null
+      field: node_exporter.filesystem.type
+      copy_from: prometheus.labels.fstype
+  - set:
+      tag: set_fs_type
+      if: ctx.prometheus?.labels?.fstype != null
+      field: system.filesystem.type
+      copy_from: prometheus.labels.fstype
+      override: true
+  - remove:
+      tag: remove_fstype_label
+      field: prometheus.labels.fstype
+      ignore_missing: true
+  - set:
+      tag: set_node_fs_mount_point
+      if: ctx.prometheus?.labels?.mountpoint != null
+      field: node_exporter.filesystem.mount_point
+      copy_from: prometheus.labels.mountpoint
+  - set:
+      tag: set_fs_mount_point
+      if: ctx.prometheus?.labels?.mountpoint != null
+      field: system.filesystem.mount_point
+      copy_from: prometheus.labels.mountpoint
+      override: true
+  - remove:
+      tag: remove_mountpoint_label
+      field: prometheus.labels.mountpoint
+      ignore_missing: true
+
+  # Remove device_error label (present on all filesystem metrics as a label)
+  - remove:
+      tag: remove_device_error_label
+      field: prometheus.labels.device_error
+      ignore_missing: true
+
+  # --- Filesystem fields: node.* (native) + system.* (System integration compat) ---
+  - set:
+      tag: set_node_fs_size
+      if: ctx.prometheus?.metrics?.node_filesystem_size_bytes != null
+      field: node_exporter.filesystem.size_bytes
+      copy_from: prometheus.metrics.node_filesystem_size_bytes
+  - rename:
+      tag: rename_fs_total
+      field: prometheus.metrics.node_filesystem_size_bytes
+      target_field: system.filesystem.total
+      ignore_missing: true
+  - set:
+      tag: set_node_fs_free
+      if: ctx.prometheus?.metrics?.node_filesystem_free_bytes != null
+      field: node_exporter.filesystem.free_bytes
+      copy_from: prometheus.metrics.node_filesystem_free_bytes
+  - rename:
+      tag: rename_fs_free
+      field: prometheus.metrics.node_filesystem_free_bytes
+      target_field: system.filesystem.free
+      ignore_missing: true
+  - set:
+      tag: set_node_fs_available
+      if: ctx.prometheus?.metrics?.node_filesystem_avail_bytes != null
+      field: node_exporter.filesystem.available_bytes
+      copy_from: prometheus.metrics.node_filesystem_avail_bytes
+  - rename:
+      tag: rename_fs_available
+      field: prometheus.metrics.node_filesystem_avail_bytes
+      target_field: system.filesystem.available
+      ignore_missing: true
+  - set:
+      tag: set_node_fs_files
+      if: ctx.prometheus?.metrics?.node_filesystem_files != null
+      field: node_exporter.filesystem.files
+      copy_from: prometheus.metrics.node_filesystem_files
+  - rename:
+      tag: rename_fs_files
+      field: prometheus.metrics.node_filesystem_files
+      target_field: system.filesystem.files
+      ignore_missing: true
+  - set:
+      tag: set_node_fs_files_free
+      if: ctx.prometheus?.metrics?.node_filesystem_files_free != null
+      field: node_exporter.filesystem.files_free
+      copy_from: prometheus.metrics.node_filesystem_files_free
+  - rename:
+      tag: rename_fs_free_files
+      field: prometheus.metrics.node_filesystem_files_free
+      target_field: system.filesystem.free_files
+      ignore_missing: true
+
+  # --- Extra fields (node_exporter.filesystem.* namespace only) ---
+  - rename:
+      tag: rename_fs_readonly
+      field: prometheus.metrics.node_filesystem_readonly
+      target_field: node_exporter.filesystem.readonly
+      ignore_missing: true
+  - rename:
+      tag: rename_fs_device_error
+      field: prometheus.metrics.node_filesystem_device_error
+      target_field: node_exporter.filesystem.device_error
+      ignore_missing: true
+
+  # Compute used bytes for both namespaces
+  - script:
+      tag: compute_used_bytes
+      lang: painless
+      if: ctx.system?.filesystem?.total != null && ctx.system?.filesystem?.free != null
+      source: >-
+        def fs = ctx.system.filesystem;
+        long usedBytes = (long)(fs.total - fs.free);
+        fs.put('used', new HashMap());
+        fs.used.bytes = usedBytes;
+        if (fs.total > 0) { fs.used.pct = (double)usedBytes / fs.total; }
+        def nfs = ctx.node_exporter?.filesystem;
+        if (nfs != null && nfs.size_bytes != null && nfs.free_bytes != null) {
+          nfs.used_bytes = (long)(nfs.size_bytes - nfs.free_bytes);
+        }
+
+  # Drop remaining prometheus metrics
+  - remove:
+      tag: remove_prometheus_metrics
+      field: prometheus.metrics
+      ignore_missing: true
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} failed with message {{ _ingest.on_failure_message }}"

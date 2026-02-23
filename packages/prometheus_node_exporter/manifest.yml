@@ -1,0 +1,69 @@
+format_version: "3.3.0"
+name: prometheus_node_exporter
+title: Prometheus Node Exporter
+version: 0.6.0
+description: Collect system metrics from Prometheus node_exporter instances with Elastic Agent.
+type: integration
+categories:
+  - observability
+  - os_system
+conditions:
+  kibana:
+    version: "^8.16.0 || ^9.0.0"
+  elastic:
+    subscription: basic
+icons:
+  - src: /img/logo.svg
+    title: Prometheus Node Exporter
+    size: 32x32
+    type: image/svg+xml
+policy_templates:
+  - name: prometheus_node_exporter
+    title: Prometheus Node Exporter
+    description: Collect system metrics from node_exporter instances
+    inputs:
+      - type: prometheus/metrics
+        title: Collect node_exporter metrics
+        description: Scrape Prometheus metrics from node_exporter /metrics endpoint
+        vars:
+          - name: hosts
+            type: text
+            title: Node Exporter Hosts
+            description: List of node_exporter endpoints to scrape
+            multi: true
+            required: true
+            show_user: true
+            default:
+              - http://localhost:9100
+          - name: metrics_path
+            type: text
+            title: Metrics Path
+            description: HTTP path where node_exporter exposes metrics
+            required: true
+            show_user: false
+            default: /metrics
+          - name: username
+            type: text
+            title: Username
+            description: Basic auth username for the metrics endpoint (if configured)
+            required: false
+            show_user: true
+          - name: timeout
+            type: text
+            title: Timeout
+            description: >-
+              HTTP request timeout for scraping the /metrics endpoint.
+              Hosts with many CPU cores may need a higher value (e.g. 60s).
+            required: false
+            show_user: false
+            default: 30s
+          - name: password
+            type: password
+            title: Password
+            description: Basic auth password for the metrics endpoint (if configured)
+            required: false
+            show_user: true
+            secret: true
+owner:
+  github: elastic/obs-infraobs-integrations
+  type: community

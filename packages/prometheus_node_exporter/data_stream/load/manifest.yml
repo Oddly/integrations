@@ -1,0 +1,31 @@
+title: Node Exporter load averages
+type: metrics
+streams:
+  - input: prometheus/metrics
+    vars:
+      - name: period
+        type: text
+        title: Period
+        required: true
+        show_user: true
+        default: 60s
+      - name: tags
+        type: text
+        title: Tags
+        multi: true
+        required: false
+        show_user: false
+        default:
+          - prometheus-node-exporter-load
+      - name: processors
+        type: yaml
+        title: Processors
+        description: >-
+          To enable normalized load averages, add a processor that injects the
+          CPU core count: add_fields: {target: _node_exporter, fields: {cores: N}}
+        required: false
+        show_user: false
+    title: Node Exporter load averages
+    description: Collect load average metrics from node_exporter
+elasticsearch:
+  index_mode: time_series

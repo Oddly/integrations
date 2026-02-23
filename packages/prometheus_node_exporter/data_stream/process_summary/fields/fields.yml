@@ -1,0 +1,57 @@
+- name: prometheus
+  type: group
+  fields:
+    - name: labels.*
+      type: keyword
+      dimension: true
+      description: Prometheus metric labels.
+- name: system
+  type: group
+  fields:
+    - name: process.summary.total
+      type: long
+      metric_type: gauge
+      description: Total number of processes (PIDs).
+    - name: process.summary.running
+      type: long
+      metric_type: gauge
+      description: Number of processes in running state.
+    - name: process.summary.sleeping
+      type: long
+      metric_type: gauge
+      description: Number of processes in sleeping state.
+    - name: process.summary.idle
+      type: long
+      metric_type: gauge
+      description: Number of processes in idle state.
+    - name: process.summary.stopped
+      type: long
+      metric_type: gauge
+      description: Number of processes in stopped state.
+    - name: process.summary.zombie
+      type: long
+      metric_type: gauge
+      description: Number of zombie processes.
+    - name: process.summary.dead
+      type: long
+      metric_type: gauge
+      description: Number of processes in uninterruptible sleep (D state).
+    - name: process.summary.unknown
+      type: long
+      metric_type: gauge
+      description: Number of processes in unknown state.
+    - name: process.summary.threads.running
+      type: long
+      metric_type: gauge
+      description: Number of threads in running state.
+    - name: process.summary.threads.blocked
+      type: long
+      metric_type: gauge
+      description: Number of threads in blocked (uninterruptible sleep) state.
+- name: node_exporter
+  type: group
+  fields:
+    - name: process.threads
+      type: long
+      metric_type: gauge
+      description: Total number of threads.

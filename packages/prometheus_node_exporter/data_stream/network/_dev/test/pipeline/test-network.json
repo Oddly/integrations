@@ -1,0 +1,24 @@
+{
+    "events": [
+        {
+            "prometheus": {
+                "metrics": {
+                    "node_network_receive_bytes_total": 5485550525,
+                    "node_network_transmit_bytes_total": 3210987654,
+                    "node_network_receive_packets_total": 8765432,
+                    "node_network_transmit_packets_total": 6543210,
+                    "node_network_receive_errs_total": 0,
+                    "node_network_transmit_errs_total": 0,
+                    "node_network_receive_drop_total": 42,
+                    "node_network_transmit_drop_total": 0
+                },
+                "labels": {
+                    "instance": "localhost:9100",
+                    "job": "node",
+                    "device": "ens18"
+                }
+            },
+            "@timestamp": "2026-02-22T12:00:00.000Z"
+        }
+    ]
+}

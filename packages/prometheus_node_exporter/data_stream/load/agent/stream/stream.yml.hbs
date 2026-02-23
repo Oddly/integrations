@@ -1,0 +1,30 @@
+metricsets: ["collector"]
+hosts:
+{{#each hosts}}
+  - {{this}}
+{{/each}}
+period: {{period}}
+timeout: {{timeout}}
+metrics_path: {{metrics_path}}
+metrics_filters:
+  include:
+    - "node_load1"
+    - "node_load5"
+    - "node_load15"
+    - "node_boot_time_seconds"
+{{#if username}}
+username: {{username}}
+{{/if}}
+{{#if password}}
+password: {{password}}
+{{/if}}
+{{#if tags}}
+tags:
+{{#each tags as |tag|}}
+  - {{tag}}
+{{/each}}
+{{/if}}
+{{#if processors}}
+processors:
+{{processors}}
+{{/if}}

@@ -1,0 +1,35 @@
+metricsets: ["collector"]
+hosts:
+{{#each hosts}}
+  - {{this}}
+{{/each}}
+period: {{period}}
+timeout: {{timeout}}
+metrics_path: {{metrics_path}}
+metrics_filters:
+  include:
+    - "node_sockstat_sockets_used"
+    - "node_sockstat_TCP_alloc"
+    - "node_sockstat_TCP_inuse"
+    - "node_sockstat_TCP_tw"
+    - "node_sockstat_TCP_orphan"
+    - "node_sockstat_TCP_mem_bytes"
+    - "node_sockstat_UDP_inuse"
+    - "node_sockstat_UDP_mem_bytes"
+    - "node_netstat_Tcp_CurrEstab"
+{{#if username}}
+username: {{username}}
+{{/if}}
+{{#if password}}
+password: {{password}}
+{{/if}}
+{{#if tags}}
+tags:
+{{#each tags as |tag|}}
+  - {{tag}}
+{{/each}}
+{{/if}}
+{{#if processors}}
+processors:
+{{processors}}
+{{/if}}

@@ -1,0 +1,35 @@
+metricsets: ["collector"]
+hosts:
+{{#each hosts}}
+  - {{this}}
+{{/each}}
+period: {{period}}
+timeout: {{timeout}}
+metrics_path: {{metrics_path}}
+use_types: {{use_types}}
+rate_counters: {{rate_counters}}
+metrics_filters:
+  include:
+    - "node_disk_reads_completed_total"
+    - "node_disk_writes_completed_total"
+    - "node_disk_read_bytes_total"
+    - "node_disk_written_bytes_total"
+    - "node_disk_read_time_seconds_total"
+    - "node_disk_write_time_seconds_total"
+    - "node_disk_io_time_seconds_total"
+{{#if username}}
+username: {{username}}
+{{/if}}
+{{#if password}}
+password: {{password}}
+{{/if}}
+{{#if tags}}
+tags:
+{{#each tags as |tag|}}
+  - {{tag}}
+{{/each}}
+{{/if}}
+{{#if processors}}
+processors:
+{{processors}}
+{{/if}}

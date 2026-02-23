@@ -1,0 +1,19 @@
+{
+    "events": [
+        {
+            "prometheus": {
+                "metrics": {
+                    "node_load1": 2.15,
+                    "node_load5": 1.89,
+                    "node_load15": 1.42,
+                    "node_boot_time_seconds": 1.771696895e+09
+                },
+                "labels": {
+                    "instance": "10.0.0.5:9100",
+                    "job": "node"
+                }
+            },
+            "@timestamp": "2026-02-22T12:00:00.000Z"
+        }
+    ]
+}

@@ -1,0 +1,213 @@
+- name: prometheus
+  type: group
+  fields:
+    - name: labels.*
+      type: keyword
+      dimension: true
+      description: Prometheus metric labels.
+# --- System-compatible memory fields ---
+- name: system.memory
+  type: group
+  fields:
+    - name: total
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total usable RAM in bytes.
+    - name: free
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free RAM in bytes (MemFree).
+    - name: cached
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total cached memory in bytes (Cached).
+    - name: used.bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Used RAM in bytes (total - free).
+    - name: used.pct
+      type: scaled_float
+      metric_type: gauge
+      unit: percent
+      description: The percentage of used memory (used.bytes / total).
+    - name: actual.free
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Estimated available RAM in bytes (MemAvailable).
+    - name: actual.used.bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Actual used RAM in bytes (total - available).
+    - name: actual.used.pct
+      type: scaled_float
+      metric_type: gauge
+      unit: percent
+      description: The percentage of actual used memory (actual.used.bytes / total).
+    - name: swap.total
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total swap space in bytes.
+    - name: swap.free
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free swap space in bytes.
+    - name: swap.used.bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Used swap space in bytes (total - free).
+    - name: swap.used.pct
+      type: scaled_float
+      metric_type: gauge
+      unit: percent
+      description: The percentage of used swap (swap.used.bytes / swap.total).
+# --- All node_exporter memory fields ---
+- name: node_exporter.memory
+  type: group
+  fields:
+    - name: total_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total usable RAM in bytes (MemTotal).
+    - name: free_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free RAM in bytes (MemFree).
+    - name: available_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Estimated available RAM in bytes (MemAvailable).
+    - name: swap.total_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total swap space in bytes (SwapTotal).
+    - name: swap.free_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free swap space in bytes (SwapFree).
+    - name: buffers_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Memory used by kernel buffers in bytes (Buffers).
+    - name: cached_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Memory used by page cache in bytes (Cached).
+    - name: swap.cached_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Cached swap in bytes (SwapCached).
+    - name: active_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Active memory in bytes (Active).
+    - name: inactive_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Inactive memory in bytes (Inactive).
+    - name: active_anon_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Active anonymous memory in bytes.
+    - name: inactive_anon_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Inactive anonymous memory in bytes.
+    - name: active_file_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Active file-backed memory in bytes.
+    - name: inactive_file_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Inactive file-backed memory in bytes.
+    - name: slab_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Kernel slab memory in bytes.
+    - name: sreclaimable_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Reclaimable slab memory in bytes.
+    - name: sunreclaim_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Unreclaimable slab memory in bytes.
+    - name: mapped_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Memory-mapped file memory in bytes.
+    - name: shmem_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Shared memory in bytes.
+    - name: commit_limit_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total memory available for commit in bytes.
+    - name: committed_as_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total committed memory in bytes.
+    - name: page_tables_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Memory used by page tables in bytes.
+    - name: writeback_tmp_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Temporary writeback memory in bytes.
+    - name: writeback_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Memory being written back to disk in bytes.
+    - name: dirty_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Dirty memory in bytes.
+    - name: hugepages.total
+      type: long
+      metric_type: gauge
+      description: Total number of huge pages.
+    - name: hugepages.free
+      type: long
+      metric_type: gauge
+      description: Number of free huge pages.
+    - name: hugepagesize_bytes
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Size of each huge page in bytes.

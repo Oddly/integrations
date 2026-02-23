@@ -1,0 +1,54 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2026-02-22T12:00:00.000Z",
+            "event": {
+                "ingested": "2026-02-22T12:00:00.000Z",
+                "kind": "metric",
+                "module": "prometheus_node_exporter",
+                "dataset": "prometheus_node_exporter.network"
+            },
+            "system": {
+                "network": {
+                    "name": "ens18",
+                    "in": {
+                        "bytes": 5485550525,
+                        "packets": 8765432,
+                        "errors": 0,
+                        "dropped": 42
+                    },
+                    "out": {
+                        "bytes": 3210987654,
+                        "packets": 6543210,
+                        "errors": 0,
+                        "dropped": 0
+                    }
+                }
+            },
+            "node_exporter": {
+                "network": {
+                    "name": "ens18",
+                    "in": {
+                        "bytes": 5485550525,
+                        "packets": 8765432,
+                        "errors": 0,
+                        "dropped": 42
+                    },
+                    "out": {
+                        "bytes": 3210987654,
+                        "packets": 6543210,
+                        "errors": 0,
+                        "dropped": 0
+                    }
+                }
+            },
+            "service": {
+                "address": "localhost:9100",
+                "name": "node"
+            },
+            "prometheus": {
+                "labels": {}
+            }
+        }
+    ]
+}

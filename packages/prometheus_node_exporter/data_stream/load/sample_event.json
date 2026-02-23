@@ -1,0 +1,38 @@
+{
+    "@timestamp": "2026-02-22T12:00:00.000Z",
+    "data_stream": {
+        "type": "metrics",
+        "dataset": "prometheus_node_exporter.load",
+        "namespace": "default"
+    },
+    "event": {
+        "kind": "metric",
+        "module": "prometheus_node_exporter",
+        "dataset": "prometheus_node_exporter.load"
+    },
+    "system": {
+        "load": {
+            "1": 0.42,
+            "5": 0.35,
+            "15": 0.28,
+            "cores": 16,
+            "norm": {
+                "1": 0.02625,
+                "5": 0.021875,
+                "15": 0.0175
+            }
+        },
+        "uptime": {
+            "duration": {
+                "ms": 604800000
+            }
+        }
+    },
+    "service": {
+        "address": "localhost:9100",
+        "name": "node"
+    },
+    "host": {
+        "name": "myhost"
+    }
+}

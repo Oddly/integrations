@@ -1,0 +1,81 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2026-02-22T12:00:00.000Z",
+            "event": {
+                "ingested": "2026-02-22T12:00:00.000Z",
+                "kind": "metric",
+                "module": "prometheus_node_exporter",
+                "dataset": "prometheus_node_exporter.memory"
+            },
+            "system": {
+                "memory": {
+                    "total": 4294967296,
+                    "free": 536870912,
+                    "cached": 1073741824,
+                    "used": {
+                        "bytes": 3758096384,
+                        "pct": 0.875
+                    },
+                    "actual": {
+                        "free": 2147483648,
+                        "used": {
+                            "bytes": 2147483648,
+                            "pct": 0.5
+                        }
+                    },
+                    "swap": {
+                        "total": 0,
+                        "free": 0,
+                        "used": {
+                            "bytes": 0
+                        }
+                    }
+                }
+            },
+            "node_exporter": {
+                "memory": {
+                    "total_bytes": 4294967296,
+                    "free_bytes": 536870912,
+                    "available_bytes": 2147483648,
+                    "swap": {
+                        "total_bytes": 0,
+                        "free_bytes": 0,
+                        "cached_bytes": 0
+                    },
+                    "buffers_bytes": 134217728,
+                    "cached_bytes": 1073741824,
+                    "active_bytes": 2147483648,
+                    "inactive_bytes": 1073741824,
+                    "active_anon_bytes": 1610612736,
+                    "inactive_anon_bytes": 0,
+                    "active_file_bytes": 536870912,
+                    "inactive_file_bytes": 1073741824,
+                    "slab_bytes": 268435456,
+                    "sreclaimable_bytes": 201326592,
+                    "sunreclaim_bytes": 67108864,
+                    "mapped_bytes": 134217728,
+                    "shmem_bytes": 33554432,
+                    "commit_limit_bytes": 2147483648,
+                    "committed_as_bytes": 3221225472,
+                    "page_tables_bytes": 16777216,
+                    "writeback_tmp_bytes": 0,
+                    "writeback_bytes": 0,
+                    "dirty_bytes": 0,
+                    "hugepages": {
+                        "total": 0,
+                        "free": 0
+                    },
+                    "hugepagesize_bytes": 2097152
+                }
+            },
+            "service": {
+                "address": "container-host:9100",
+                "name": "node"
+            },
+            "prometheus": {
+                "labels": {}
+            }
+        }
+    ]
+}

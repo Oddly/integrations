@@ -1,0 +1,21 @@
+{
+    "events": [
+        {
+            "prometheus": {
+                "metrics": {
+                    "node_load1": 0.01,
+                    "node_load5": 0.05,
+                    "node_load15": 0.02
+                },
+                "labels": {
+                    "instance": "192.168.1.10:9100",
+                    "job": "infra"
+                }
+            },
+            "_node_exporter": {
+                "cores": 2
+            },
+            "@timestamp": "2026-02-22T12:00:00.000Z"
+        }
+    ]
+}

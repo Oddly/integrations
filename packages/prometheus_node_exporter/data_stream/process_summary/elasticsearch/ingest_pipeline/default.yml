@@ -1,0 +1,85 @@
+---
+description: Pipeline for node_exporter process summary metrics
+processors:
+  - set:
+      tag: set_event_ingested
+      field: event.ingested
+      value: "{{_ingest.timestamp}}"
+  - set:
+      tag: set_event_kind
+      field: event.kind
+      value: metric
+  - set:
+      tag: set_event_module
+      field: event.module
+      value: prometheus_node_exporter
+  - set:
+      tag: set_event_dataset
+      field: event.dataset
+      value: prometheus_node_exporter.process_summary
+
+  # Map prometheus.labels to ECS fields
+  - set:
+      tag: set_service_address
+      if: ctx.prometheus?.labels?.instance != null
+      field: service.address
+      copy_from: prometheus.labels.instance
+      override: true
+  - remove:
+      tag: remove_instance_label
+      field: prometheus.labels.instance
+      ignore_missing: true
+  - set:
+      tag: set_service_name
+      if: ctx.prometheus?.labels?.job != null
+      field: service.name
+      copy_from: prometheus.labels.job
+      override: true
+  - remove:
+      tag: remove_job_label
+      field: prometheus.labels.job
+      ignore_missing: true
+
+  # --- Aggregate doc (label-free metrics from stat + processes collectors) ---
+  - rename:
+      tag: rename_processes_pids
+      field: prometheus.metrics.node_processes_pids
+      target_field: system.process.summary.total
+      ignore_missing: true
+  - rename:
+      tag: rename_procs_running
+      field: prometheus.metrics.node_procs_running
+      target_field: system.process.summary.running
+      ignore_missing: true
+  - rename:
+      tag: rename_procs_blocked
+      field: prometheus.metrics.node_procs_blocked
+      target_field: system.process.summary.threads.blocked
+      ignore_missing: true
+  - rename:
+      tag: rename_processes_threads
+      field: prometheus.metrics.node_processes_threads
+      target_field: node_exporter.process.threads
+      ignore_missing: true
+
+  # --- Per-thread-state doc (thread_state=R gives threads.running) ---
+  - rename:
+      tag: rename_thread_state_running
+      if: ctx.prometheus?.labels?.thread_state == 'R'
+      field: prometheus.metrics.node_processes_threads_state
+      target_field: system.process.summary.threads.running
+      ignore_missing: true
+
+  # Drop remaining prometheus metrics
+  - remove:
+      tag: remove_prometheus_metrics
+      field: prometheus.metrics
+      ignore_missing: true
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} failed with message {{ _ingest.on_failure_message }}"

@@ -1,0 +1,113 @@
+---
+description: Pipeline for node_exporter load average metrics
+processors:
+  - set:
+      tag: set_event_ingested
+      field: event.ingested
+      value: "{{_ingest.timestamp}}"
+  - set:
+      tag: set_event_kind
+      field: event.kind
+      value: metric
+  - set:
+      tag: set_event_module
+      field: event.module
+      value: prometheus_node_exporter
+  - set:
+      tag: set_event_dataset
+      field: event.dataset
+      value: prometheus_node_exporter.load
+
+  # Map prometheus.labels to ECS fields
+  - set:
+      tag: set_service_address
+      if: ctx.prometheus?.labels?.instance != null
+      field: service.address
+      copy_from: prometheus.labels.instance
+      override: true
+  - remove:
+      tag: remove_instance_label
+      field: prometheus.labels.instance
+      ignore_missing: true
+  - set:
+      tag: set_service_name
+      if: ctx.prometheus?.labels?.job != null
+      field: service.name
+      copy_from: prometheus.labels.job
+      override: true
+  - remove:
+      tag: remove_job_label
+      field: prometheus.labels.job
+      ignore_missing: true
+
+  # Rename load metrics to ECS system.load fields
+  - rename:
+      tag: rename_load1
+      field: prometheus.metrics.node_load1
+      target_field: system.load.1
+      ignore_missing: true
+  - rename:
+      tag: rename_load5
+      field: prometheus.metrics.node_load5
+      target_field: system.load.5
+      ignore_missing: true
+  - rename:
+      tag: rename_load15
+      field: prometheus.metrics.node_load15
+      target_field: system.load.15
+      ignore_missing: true
+
+  # Compute uptime from boot time
+  - script:
+      tag: compute_uptime
+      lang: painless
+      if: ctx.prometheus?.metrics?.node_boot_time_seconds != null
+      source: >-
+        double boot_seconds = ctx.prometheus.metrics.node_boot_time_seconds;
+        long now_ms = System.currentTimeMillis();
+        long boot_ms = (long)(boot_seconds * 1000.0);
+        ctx.system.put('uptime', new HashMap());
+        ctx.system.uptime.put('duration', new HashMap());
+        ctx.system.uptime.duration.ms = now_ms - boot_ms;
+
+  # Compute system.load.cores and normalized load from agent-injected core count
+  - script:
+      tag: compute_normalized_load
+      lang: painless
+      if: ctx._node_exporter?.cores != null && ctx._node_exporter.cores > 0
+      source: >-
+        int cores = ctx._node_exporter.cores;
+        def load = ctx.system?.load;
+        if (load == null) return;
+        load.cores = cores;
+        if (load.containsKey('1') && load.get('1') != null) {
+          def norm = new HashMap();
+          load.put('norm', norm);
+          norm.put('1', load.get('1') / cores);
+          if (load.containsKey('5') && load.get('5') != null) {
+            norm.put('5', load.get('5') / cores);
+          }
+          if (load.containsKey('15') && load.get('15') != null) {
+            norm.put('15', load.get('15') / cores);
+          }
+        }
+
+  # Clean up temporary fields
+  - remove:
+      tag: remove_node_exporter_temp
+      field: _node_exporter
+      ignore_missing: true
+
+  # Drop remaining prometheus metrics
+  - remove:
+      tag: remove_prometheus_metrics
+      field: prometheus.metrics
+      ignore_missing: true
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} failed with message {{ _ingest.on_failure_message }}"

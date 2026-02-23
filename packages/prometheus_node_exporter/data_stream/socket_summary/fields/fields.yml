@@ -1,0 +1,55 @@
+- name: prometheus
+  type: group
+  fields:
+    - name: labels.*
+      type: keyword
+      dimension: true
+      description: Prometheus metric labels.
+- name: system
+  type: group
+  fields:
+    - name: socket.summary.all.count
+      type: long
+      metric_type: gauge
+      description: Total number of TCP and UDP sockets.
+    - name: socket.summary.tcp.all.count
+      type: long
+      metric_type: gauge
+      description: Total number of allocated TCP sockets.
+    - name: socket.summary.tcp.all.established
+      type: long
+      metric_type: gauge
+      description: Number of established TCP connections.
+    - name: socket.summary.tcp.all.time_wait
+      type: long
+      metric_type: gauge
+      description: Number of TCP connections in TIME_WAIT state.
+    - name: socket.summary.tcp.all.orphan
+      type: long
+      metric_type: gauge
+      description: Number of orphaned TCP connections.
+    - name: socket.summary.tcp.memory
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Memory used by TCP sockets in bytes.
+    - name: socket.summary.udp.all.count
+      type: long
+      metric_type: gauge
+      description: Number of UDP sockets in use.
+    - name: socket.summary.udp.memory
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Memory used by UDP sockets in bytes.
+- name: node_exporter
+  type: group
+  fields:
+    - name: socket.tcp.inuse
+      type: long
+      metric_type: gauge
+      description: Number of TCP sockets in use (active connections).
+    - name: socket.all.used
+      type: long
+      metric_type: gauge
+      description: Total sockets in use across all protocols (from /proc/net/sockstat).

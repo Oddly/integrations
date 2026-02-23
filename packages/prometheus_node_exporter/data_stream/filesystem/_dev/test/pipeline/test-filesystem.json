@@ -1,0 +1,46 @@
+{
+    "events": [
+        {
+            "prometheus": {
+                "metrics": {
+                    "node_filesystem_size_bytes": 107374182400,
+                    "node_filesystem_free_bytes": 53687091200,
+                    "node_filesystem_avail_bytes": 48318382080,
+                    "node_filesystem_files": 6553600,
+                    "node_filesystem_files_free": 6000000,
+                    "node_filesystem_readonly": 0,
+                    "node_filesystem_device_error": 0
+                },
+                "labels": {
+                    "instance": "localhost:9100",
+                    "job": "node",
+                    "device": "/dev/sda1",
+                    "fstype": "ext4",
+                    "mountpoint": "/"
+                }
+            },
+            "@timestamp": "2026-02-22T12:00:00.000Z"
+        },
+        {
+            "prometheus": {
+                "metrics": {
+                    "node_filesystem_size_bytes": 523190272,
+                    "node_filesystem_free_bytes": 523190272,
+                    "node_filesystem_avail_bytes": 523190272,
+                    "node_filesystem_files": 0,
+                    "node_filesystem_files_free": 0,
+                    "node_filesystem_readonly": 0,
+                    "node_filesystem_device_error": 0
+                },
+                "labels": {
+                    "instance": "localhost:9100",
+                    "job": "node",
+                    "device": "tmpfs",
+                    "fstype": "tmpfs",
+                    "mountpoint": "/run"
+                }
+            },
+            "@timestamp": "2026-02-22T12:00:00.000Z"
+        }
+    ]
+}

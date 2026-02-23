@@ -1,0 +1,33 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2026-02-22T12:00:00.000Z",
+            "event": {
+                "ingested": "2026-02-22T12:00:00.000Z",
+                "kind": "metric",
+                "module": "prometheus_node_exporter",
+                "dataset": "prometheus_node_exporter.load"
+            },
+            "system": {
+                "load": {
+                    "1": 0.01,
+                    "5": 0.05,
+                    "15": 0.02,
+                    "cores": 2,
+                    "norm": {
+                        "1": 0.005,
+                        "5": 0.025,
+                        "15": 0.01
+                    }
+                }
+            },
+            "service": {
+                "address": "192.168.1.10:9100",
+                "name": "infra"
+            },
+            "prometheus": {
+                "labels": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,208 @@
+---
+description: Pipeline for node_exporter disk I/O metrics (use_types + rate_counters)
+processors:
+  - set:
+      tag: set_event_ingested
+      field: event.ingested
+      value: "{{_ingest.timestamp}}"
+  - set:
+      tag: set_event_kind
+      field: event.kind
+      value: metric
+  - set:
+      tag: set_event_module
+      field: event.module
+      value: prometheus_node_exporter
+  - set:
+      tag: set_event_dataset
+      field: event.dataset
+      value: prometheus_node_exporter.diskstats
+
+  # Map prometheus.labels to ECS fields
+  - set:
+      tag: set_service_address
+      if: ctx.prometheus?.labels?.instance != null
+      field: service.address
+      copy_from: prometheus.labels.instance
+      override: true
+  - remove:
+      tag: remove_instance_label
+      field: prometheus.labels.instance
+      ignore_missing: true
+  - set:
+      tag: set_service_name
+      if: ctx.prometheus?.labels?.job != null
+      field: service.name
+      copy_from: prometheus.labels.job
+      override: true
+  - remove:
+      tag: remove_job_label
+      field: prometheus.labels.job
+      ignore_missing: true
+
+  # Rename device label to both namespaces
+  - set:
+      tag: set_node_diskio_name
+      if: ctx.prometheus?.labels?.device != null
+      field: node_exporter.diskio.name
+      copy_from: prometheus.labels.device
+  - set:
+      tag: set_diskio_name
+      if: ctx.prometheus?.labels?.device != null
+      field: system.diskio.name
+      copy_from: prometheus.labels.device
+      override: true
+  - remove:
+      tag: remove_device_label
+      field: prometheus.labels.device
+      ignore_missing: true
+
+  # --- Counter fields: use_types puts counters at prometheus.<metric>.counter ---
+  - set:
+      tag: set_node_reads_completed
+      if: ctx.prometheus?.node_disk_reads_completed_total?.counter != null
+      field: node_exporter.diskio.read.count
+      copy_from: prometheus.node_disk_reads_completed_total.counter
+  - set:
+      tag: set_system_reads_completed
+      if: ctx.prometheus?.node_disk_reads_completed_total?.counter != null
+      field: system.diskio.read.count
+      copy_from: prometheus.node_disk_reads_completed_total.counter
+  - set:
+      tag: set_node_writes_completed
+      if: ctx.prometheus?.node_disk_writes_completed_total?.counter != null
+      field: node_exporter.diskio.write.count
+      copy_from: prometheus.node_disk_writes_completed_total.counter
+  - set:
+      tag: set_system_writes_completed
+      if: ctx.prometheus?.node_disk_writes_completed_total?.counter != null
+      field: system.diskio.write.count
+      copy_from: prometheus.node_disk_writes_completed_total.counter
+  - set:
+      tag: set_node_read_bytes
+      if: ctx.prometheus?.node_disk_read_bytes_total?.counter != null
+      field: node_exporter.diskio.read.bytes
+      copy_from: prometheus.node_disk_read_bytes_total.counter
+  - set:
+      tag: set_system_read_bytes
+      if: ctx.prometheus?.node_disk_read_bytes_total?.counter != null
+      field: system.diskio.read.bytes
+      copy_from: prometheus.node_disk_read_bytes_total.counter
+  - set:
+      tag: set_node_written_bytes
+      if: ctx.prometheus?.node_disk_written_bytes_total?.counter != null
+      field: node_exporter.diskio.write.bytes
+      copy_from: prometheus.node_disk_written_bytes_total.counter
+  - set:
+      tag: set_system_written_bytes
+      if: ctx.prometheus?.node_disk_written_bytes_total?.counter != null
+      field: system.diskio.write.bytes
+      copy_from: prometheus.node_disk_written_bytes_total.counter
+
+  # Time fields: seconds in node_exporter.*, ms in system.*
+  - set:
+      tag: set_node_read_time
+      if: ctx.prometheus?.node_disk_read_time_seconds_total?.counter != null
+      field: node_exporter.diskio.read.time_seconds
+      copy_from: prometheus.node_disk_read_time_seconds_total.counter
+  - set:
+      tag: set_node_write_time
+      if: ctx.prometheus?.node_disk_write_time_seconds_total?.counter != null
+      field: node_exporter.diskio.write.time_seconds
+      copy_from: prometheus.node_disk_write_time_seconds_total.counter
+  - set:
+      tag: set_node_io_time
+      if: ctx.prometheus?.node_disk_io_time_seconds_total?.counter != null
+      field: node_exporter.diskio.io.time_seconds
+      copy_from: prometheus.node_disk_io_time_seconds_total.counter
+
+  # Convert seconds to milliseconds for system-compatible fields
+  - script:
+      tag: convert_time_to_ms
+      lang: painless
+      source: >-
+        def nd = ctx.node_exporter?.diskio;
+        if (nd == null) return;
+        def diskio = ctx.system?.diskio;
+        if (diskio == null) return;
+        def read_s = nd.read?.time_seconds;
+        if (read_s != null) {
+          if (diskio.read == null) diskio.put('read', new HashMap());
+          diskio.read.time = (long)(read_s * 1000);
+        }
+        def write_s = nd.write?.time_seconds;
+        if (write_s != null) {
+          if (diskio.write == null) diskio.put('write', new HashMap());
+          diskio.write.time = (long)(write_s * 1000);
+        }
+        def io_s = nd.io?.time_seconds;
+        if (io_s != null) {
+          if (diskio.io == null) diskio.put('io', new HashMap());
+          diskio.io.time = (long)(io_s * 1000);
+        }
+
+  # Compute iostat-style metrics from rate_counters data
+  - script:
+      tag: compute_iostat
+      lang: painless
+      if: ctx.prometheus?.node_disk_reads_completed_total?.rate != null
+      source: >-
+        def p = ctx.prometheus;
+        def read_rate = p.node_disk_reads_completed_total?.rate;
+        def write_rate = p.node_disk_writes_completed_total?.rate;
+        def read_time_rate = p.node_disk_read_time_seconds_total?.rate;
+        def write_time_rate = p.node_disk_write_time_seconds_total?.rate;
+        def io_time_rate = p.node_disk_io_time_seconds_total?.rate;
+        def read_bytes_rate = p.node_disk_read_bytes_total?.rate;
+        def write_bytes_rate = p.node_disk_written_bytes_total?.rate;
+        def iostat = new HashMap();
+        if (read_rate != null) { iostat.put('read', new HashMap()); iostat.read.request_per_sec = read_rate; }
+        if (write_rate != null) { iostat.put('write', new HashMap()); iostat.write.request_per_sec = write_rate; }
+        if (read_bytes_rate != null) {
+          if (iostat.read == null) iostat.put('read', new HashMap());
+          iostat.read.per_sec_bytes = read_bytes_rate;
+        }
+        if (write_bytes_rate != null) {
+          if (iostat.write == null) iostat.put('write', new HashMap());
+          iostat.write.per_sec_bytes = write_bytes_rate;
+        }
+        double total_ops = (read_rate != null ? read_rate : 0.0) + (write_rate != null ? write_rate : 0.0);
+        if (total_ops > 0) {
+          double total_time_rate = (read_time_rate != null ? read_time_rate : 0.0) + (write_time_rate != null ? write_time_rate : 0.0);
+          iostat.await = (total_time_rate / total_ops) * 1000.0;
+          if (read_rate != null && read_rate > 0 && read_time_rate != null) {
+            iostat.read.await = (read_time_rate / read_rate) * 1000.0;
+          }
+          if (write_rate != null && write_rate > 0 && write_time_rate != null) {
+            iostat.write.await = (write_time_rate / write_rate) * 1000.0;
+          }
+          if (io_time_rate != null) {
+            iostat.service_time = (io_time_rate / total_ops) * 1000.0;
+          }
+        }
+        if (io_time_rate != null) {
+          iostat.busy = io_time_rate * 100.0;
+        }
+        if (ctx.system.diskio == null) ctx.system.diskio = new HashMap();
+        ctx.system.diskio.iostat = iostat;
+
+  # Drop remaining prometheus metric fields (use_types puts them at prometheus.<metric>)
+  - remove:
+      tag: remove_prometheus_metrics
+      field:
+        - prometheus.node_disk_reads_completed_total
+        - prometheus.node_disk_writes_completed_total
+        - prometheus.node_disk_read_bytes_total
+        - prometheus.node_disk_written_bytes_total
+        - prometheus.node_disk_read_time_seconds_total
+        - prometheus.node_disk_write_time_seconds_total
+        - prometheus.node_disk_io_time_seconds_total
+      ignore_missing: true
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} failed with message {{ _ingest.on_failure_message }}"

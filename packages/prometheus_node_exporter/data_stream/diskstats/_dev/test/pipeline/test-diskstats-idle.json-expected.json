@@ -1,0 +1,67 @@
+{
+    "expected": [
+        {
+            "@timestamp": "2026-02-22T12:00:00.000Z",
+            "event": {
+                "ingested": "2026-02-22T12:00:00.000Z",
+                "kind": "metric",
+                "module": "prometheus_node_exporter",
+                "dataset": "prometheus_node_exporter.diskstats"
+            },
+            "system": {
+                "diskio": {
+                    "name": "sda",
+                    "read": {
+                        "count": 597,
+                        "bytes": 10730496,
+                        "time": 4467
+                    },
+                    "write": {
+                        "count": 345,
+                        "bytes": 5767168,
+                        "time": 514
+                    },
+                    "io": {
+                        "time": 4171
+                    },
+                    "iostat": {
+                        "read": {
+                            "request_per_sec": 0.0,
+                            "per_sec_bytes": 0.0
+                        },
+                        "write": {
+                            "request_per_sec": 0.0,
+                            "per_sec_bytes": 0.0
+                        },
+                        "busy": 0.0
+                    }
+                }
+            },
+            "node_exporter": {
+                "diskio": {
+                    "name": "sda",
+                    "read": {
+                        "count": 597,
+                        "bytes": 10730496,
+                        "time_seconds": 4.467
+                    },
+                    "write": {
+                        "count": 345,
+                        "bytes": 5767168,
+                        "time_seconds": 0.514
+                    },
+                    "io": {
+                        "time_seconds": 4.171
+                    }
+                }
+            },
+            "service": {
+                "address": "172.30.0.1:9100",
+                "name": "node"
+            },
+            "prometheus": {
+                "labels": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "events": [
+        {
+            "prometheus": {
+                "metrics": {
+                    "node_processes_threads_state": 11
+                },
+                "labels": {
+                    "instance": "localhost:9100",
+                    "job": "node",
+                    "thread_state": "R"
+                }
+            },
+            "@timestamp": "2026-02-22T12:00:00.000Z"
+        }
+    ]
+}
