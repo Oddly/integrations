@@ -1,3 +1,8 @@
+- version: 0.3.1
+  changes:
+    - description: Inject cluster name into all cluster metrics events via CEL program for cluster-level filtering.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
 - version: 0.3.0
   changes:
     - description: Restructure dashboards to separate cluster overview from per-node views. Add dedicated Node and Firewall dashboards.
