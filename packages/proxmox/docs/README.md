@@ -215,6 +215,7 @@ Refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ec
 | host.name | Host name. | keyword |  |  |
 | host.os.build | OS build information. | keyword |  |  |
 | host.os.codename | OS codename, if any. | keyword |  |  |
+| proxmox.cluster.name | Proxmox cluster name. | keyword |  |  |
 | proxmox.node.cpu | CPU usage ratio (0.0 to 1.0). | double |  | gauge |
 | proxmox.node.cpuinfo.cores | Number of CPU cores per socket. | long |  |  |
 | proxmox.node.cpuinfo.model | CPU model name. | keyword |  |  |
@@ -335,6 +336,7 @@ Refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ec
 | observer.vendor | Observer vendor. | keyword |
 | proxmox.auth.realm | Authentication realm (pam, pve, ldap). | keyword |
 | proxmox.auth.token_id | API token ID if request used token auth. | keyword |
+| proxmox.cluster.name | Proxmox cluster name. | keyword |
 | related.ip | All of the IPs seen on your event. | ip |
 | related.user | All the user names or other user identifiers seen on the event. | keyword |
 | source.ip | IP address of the source. | ip |
@@ -428,6 +430,7 @@ Refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ec
 | observer.product | Observer product. | keyword |
 | observer.type | Observer type. | keyword |
 | observer.vendor | Observer vendor. | keyword |
+| proxmox.cluster.name | Proxmox cluster name. | keyword |
 | proxmox.firewall.chain | Firewall chain name (PVEFW-HOST-IN, PVEFW-HOST-OUT, etc). | keyword |
 | proxmox.firewall.vmid | VM or container ID from the firewall chain. | keyword |
 | related.ip | All of the IPs seen on your event. | ip |
@@ -523,6 +526,7 @@ Refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ec
 | observer.type | Observer type. | keyword |
 | observer.vendor | Observer vendor. | keyword |
 | proxmox.auth.realm | Authentication realm (pam, pve, ldap). | keyword |
+| proxmox.cluster.name | Proxmox cluster name. | keyword |
 | related.ip | All of the IPs seen on your event. | ip |
 | related.user | All the user names or other user identifiers seen on the event. | keyword |
 | source.ip | IP address of the source. | ip |
@@ -612,6 +616,7 @@ Refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ec
 | observer.product | Observer product. | keyword |
 | observer.type | Observer type. | keyword |
 | observer.vendor | Observer vendor. | keyword |
+| proxmox.cluster.name | Proxmox cluster name. | keyword |
 | proxmox.corosync.members | Number of cluster members after a membership change. | long |
 | proxmox.corosync.subsystem | Corosync subsystem (QUORUM, TOTEM, KNET, MAIN). | keyword |
 | systemd.cgroup | The control group path in the systemd hierarchy. | keyword |
@@ -699,6 +704,7 @@ Refer to the following [document](https://www.elastic.co/guide/en/ecs/current/ec
 | observer.product | Observer product. | keyword |
 | observer.type | Observer type. | keyword |
 | observer.vendor | Observer vendor. | keyword |
+| proxmox.cluster.name | Proxmox cluster name. | keyword |
 | proxmox.task.duration_seconds | Task duration in seconds. | long |
 | proxmox.task.node | Node that ran the task. | keyword |
 | proxmox.task.type | Task type (vzdump, qmstart, qmstop, vncproxy, etc). | keyword |

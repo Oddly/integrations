@@ -20,6 +20,17 @@ processors:
       field: event.dataset
       value: proxmox.node
 
+  # Set cluster name from CEL-injected field (available on all events)
+  - set:
+      tag: set_cluster_name
+      if: ctx.proxmox_cluster_name != null && ctx.proxmox_cluster_name != ''
+      field: proxmox.cluster.name
+      value: "{{proxmox_cluster_name}}"
+  - remove:
+      tag: remove_proxmox_cluster_name
+      field: proxmox_cluster_name
+      ignore_missing: true
+
   # Parse JSON message from CEL input
   - json:
       tag: json_parse_message

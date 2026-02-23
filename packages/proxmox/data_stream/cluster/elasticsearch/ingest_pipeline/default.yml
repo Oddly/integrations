@@ -58,6 +58,12 @@ processors:
       if: ctx._temp?.json?.id != null && ctx._temp?.json?.node != null
       field: proxmox.cluster.resource.node
       value: "{{_temp.json.node}}"
+  # For node-type resources, Proxmox uses "node" not "name" — normalise to "name"
+  - set:
+      tag: set_resource_name_from_node
+      if: ctx._temp?.json?.id != null && ctx._temp?.json?.type == 'node' && ctx._temp?.json?.node != null && ctx._temp?.json?.name == null
+      field: proxmox.cluster.resource.name
+      value: "{{_temp.json.node}}"
   - convert:
       tag: convert_resource_vmid
       if: ctx._temp?.json?.id != null && ctx._temp?.json?.vmid != null

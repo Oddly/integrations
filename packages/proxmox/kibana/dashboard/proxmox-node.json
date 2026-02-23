@@ -21,7 +21,7 @@
             "chainingSystem": "HIERARCHICAL",
             "controlStyle": "oneLine",
             "ignoreParentSettingsJSON": "{\"ignoreFilters\": false, \"ignoreQuery\": false, \"ignoreTimerange\": false, \"ignoreValidations\": true}",
-            "panelsJSON": "{\"ctrl_0\": {\"type\": \"optionsListControl\", \"order\": 0, \"grow\": true, \"width\": \"medium\", \"explicitInput\": {\"id\": \"ctrl_0\", \"fieldName\": \"agent.name\", \"title\": \"Proxmox Host\", \"dataViewId\": \"metrics-*\", \"enhancements\": {}}}}"
+            "panelsJSON": "{\"ctrl_0\": {\"type\": \"optionsListControl\", \"order\": 0, \"grow\": true, \"width\": \"medium\", \"explicitInput\": {\"id\": \"ctrl_0\", \"fieldName\": \"proxmox.cluster.name\", \"title\": \"Cluster\", \"dataViewId\": \"metrics-*\", \"enhancements\": {}}}, \"ctrl_1\": {\"type\": \"optionsListControl\", \"order\": 1, \"grow\": true, \"width\": \"medium\", \"explicitInput\": {\"id\": \"ctrl_1\", \"fieldName\": \"agent.name\", \"title\": \"Proxmox Host\", \"dataViewId\": \"metrics-*\", \"enhancements\": {}}}}"
         }
     },
     "references": [

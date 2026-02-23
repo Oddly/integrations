@@ -1,3 +1,24 @@
+- version: 0.4.2
+  changes:
+    - description: Refocus cluster overview on node health with CPU/memory time series, promote nodes table, remove guest panels (moved to VMs dashboard).
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
+- version: 0.4.1
+  changes:
+    - description: Fix cluster nodes table by normalizing node name field in cluster ingest pipeline.
+      type: bugfix
+      link: https://github.com/elastic/integrations/pull/1
+- version: 0.4.0
+  changes:
+    - description: Auto-discover node name from /cluster/status API, removing the node_name configuration variable.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
+    - description: Add cluster name dropdown to all dashboards and node list table to cluster overview.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
+    - description: Add optional cluster_name variable to tag log data streams with the cluster name for cross-stream filtering.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/1
 - version: 0.3.1
   changes:
     - description: Inject cluster name into all cluster metrics events via CEL program for cluster-level filtering.

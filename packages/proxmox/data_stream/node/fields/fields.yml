@@ -1,6 +1,12 @@
 - name: proxmox
   type: group
   fields:
+    - name: cluster
+      type: group
+      fields:
+        - name: name
+          type: keyword
+          description: Proxmox cluster name.
     - name: node
       type: group
       fields:
@@ -105,7 +111,9 @@
               description: CPU model name.
             - name: cores
               type: long
+              metric_type: gauge
               description: Number of CPU cores per socket.
             - name: sockets
               type: long
+              metric_type: gauge
               description: Number of CPU sockets.

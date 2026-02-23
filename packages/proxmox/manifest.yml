@@ -1,7 +1,7 @@
 format_version: "3.3.0"
 name: proxmox
 title: Proxmox VE
-version: 0.3.1
+version: 0.4.2
 description: Collect metrics and logs from Proxmox VE hosts with Elastic Agent.
 type: integration
 categories:
@@ -21,6 +21,16 @@ policy_templates:
   - name: proxmox
     title: Proxmox VE
     description: Collect metrics and logs from Proxmox VE hosts
+    vars:
+      - name: cluster_name
+        type: text
+        title: Cluster Name
+        description: >-
+          Proxmox cluster name. Auto-discovered for metric data streams via the API.
+          Set this to tag log data streams (access, auth, firewall, tasks, cluster_logs)
+          with the cluster name for cross-stream filtering.
+        required: false
+        show_user: true
     inputs:
       - type: cel
         title: Collect Proxmox metrics
@@ -58,12 +68,6 @@ policy_templates:
             description: A list of root certificates for server verification. If empty, the host CA set is used.
             multi: true
             required: false
-            show_user: true
-          - name: node_name
-            type: text
-            title: Node Name
-            description: Proxmox node hostname for node-specific metrics collection
-            required: true
             show_user: true
       - type: logfile
         title: Collect Proxmox logs (file)

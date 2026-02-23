@@ -16,7 +16,18 @@ tags:
   - preserve_original_event
 {{/if}}
 {{/if}}
+{{#if cluster_name}}
+processors:
+  - add_fields:
+      target: proxmox.cluster
+      fields:
+        name: '{{cluster_name}}'
+{{#if processors}}
+{{processors}}
+{{/if}}
+{{else}}
 {{#if processors}}
 processors:
 {{processors}}
+{{/if}}
 {{/if}}
