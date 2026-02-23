@@ -25,23 +25,6 @@
                     }
                 }
             },
-            "node_exporter": {
-                "network": {
-                    "name": "lo",
-                    "in": {
-                        "bytes": 987654321,
-                        "packets": 12345678,
-                        "errors": 0,
-                        "dropped": 0
-                    },
-                    "out": {
-                        "bytes": 987654321,
-                        "packets": 12345678,
-                        "errors": 0,
-                        "dropped": 0
-                    }
-                }
-            },
             "service": {
                 "address": "10.0.0.1:9100",
                 "name": "node"

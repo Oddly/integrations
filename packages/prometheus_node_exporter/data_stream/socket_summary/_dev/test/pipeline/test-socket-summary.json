@@ -11,7 +11,9 @@
                     "node_sockstat_TCP_orphan": 0,
                     "node_sockstat_TCP_mem_bytes": 40960,
                     "node_sockstat_UDP_inuse": 8,
-                    "node_sockstat_UDP_mem_bytes": 8192
+                    "node_sockstat_UDP_mem_bytes": 8192,
+                    "node_sockstat_TCP6_inuse": 30,
+                    "node_sockstat_UDP6_inuse": 4
                 },
                 "labels": {
                     "instance": "localhost:9100",

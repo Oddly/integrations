@@ -14,7 +14,7 @@
         "socket": {
             "summary": {
                 "all": {
-                    "count": 106
+                    "count": 110
                 },
                 "tcp": {
                     "all": {
@@ -27,7 +27,7 @@
                 },
                 "udp": {
                     "all": {
-                        "count": 8
+                        "count": 12
                     },
                     "memory": 8192
                 }
@@ -37,6 +37,7 @@
     "node_exporter": {
         "socket": {
             "tcp": {
+                "alloc": 98,
                 "inuse": 56
             },
             "all": {

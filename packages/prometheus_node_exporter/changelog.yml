@@ -1,3 +1,8 @@
+- version: "0.7.0"
+  changes:
+    - description: Fix filesystem used.pct formula and socket_summary semantic mismatches.
+      type: bugfix
+      link: https://github.com/elastic/integrations/pull/99999
 - version: "0.6.0"
   changes:
     - description: Add process_summary and socket_summary data streams.

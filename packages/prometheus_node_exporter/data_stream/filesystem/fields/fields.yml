@@ -44,7 +44,7 @@
       type: scaled_float
       metric_type: gauge
       unit: percent
-      description: The percentage of used disk space (used.bytes / total).
+      description: The percentage of used disk space (used / (used + available)).
     - name: files
       type: long
       metric_type: gauge

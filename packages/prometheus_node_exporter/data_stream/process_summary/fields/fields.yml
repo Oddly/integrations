@@ -40,14 +40,6 @@
       type: long
       metric_type: gauge
       description: Number of processes in unknown state.
-    - name: process.summary.threads.running
-      type: long
-      metric_type: gauge
-      description: Number of threads in running state.
-    - name: process.summary.threads.blocked
-      type: long
-      metric_type: gauge
-      description: Number of threads in blocked (uninterruptible sleep) state.
 - name: node_exporter
   type: group
   fields:

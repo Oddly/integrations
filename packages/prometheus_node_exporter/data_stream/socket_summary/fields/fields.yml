@@ -15,7 +15,7 @@
     - name: socket.summary.tcp.all.count
       type: long
       metric_type: gauge
-      description: Total number of allocated TCP sockets.
+      description: Total number of TCP sockets (IPv4 inuse + IPv6 inuse + TIME_WAIT).
     - name: socket.summary.tcp.all.established
       type: long
       metric_type: gauge
@@ -36,7 +36,7 @@
     - name: socket.summary.udp.all.count
       type: long
       metric_type: gauge
-      description: Number of UDP sockets in use.
+      description: Total number of UDP sockets (IPv4 inuse + IPv6 inuse).
     - name: socket.summary.udp.memory
       type: long
       metric_type: gauge
@@ -45,10 +45,14 @@
 - name: node_exporter
   type: group
   fields:
+    - name: socket.tcp.alloc
+      type: long
+      metric_type: gauge
+      description: Total allocated TCP sockets (from /proc/net/sockstat TCP alloc).
     - name: socket.tcp.inuse
       type: long
       metric_type: gauge
-      description: Number of TCP sockets in use (active connections).
+      description: Number of IPv4 TCP sockets in use (excludes LISTEN and TIME_WAIT).
     - name: socket.all.used
       type: long
       metric_type: gauge

@@ -15,9 +15,7 @@
             "summary": {
                 "total": 312,
                 "running": 2,
-                "threads": {
-                    "blocked": 0
-                }
+                "dead": 0
             }
         }
     },

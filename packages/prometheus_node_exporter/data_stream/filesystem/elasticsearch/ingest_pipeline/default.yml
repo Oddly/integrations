@@ -167,7 +167,12 @@ processors:
         long usedBytes = (long)(fs.total - fs.free);
         fs.put('used', new HashMap());
         fs.used.bytes = usedBytes;
-        if (fs.total > 0) { fs.used.pct = (double)usedBytes / fs.total; }
+        if (fs.containsKey('available') && fs.available != null) {
+          long denom = usedBytes + (long)fs.available;
+          if (denom > 0) { fs.used.pct = (double)usedBytes / denom; }
+        } else if (fs.total > 0) {
+          fs.used.pct = (double)usedBytes / fs.total;
+        }
         def nfs = ctx.node_exporter?.filesystem;
         if (nfs != null && nfs.size_bytes != null && nfs.free_bytes != null) {
           nfs.used_bytes = (long)(nfs.size_bytes - nfs.free_bytes);

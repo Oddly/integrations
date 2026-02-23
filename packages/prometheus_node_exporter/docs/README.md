@@ -420,7 +420,7 @@ An example event for `filesystem` looks as following:
 | system.filesystem.total | Total filesystem size in bytes. | long | byte | gauge |
 | system.filesystem.type | Filesystem type (ext4, xfs, tmpfs, etc.). | keyword |  |  |
 | system.filesystem.used.bytes | Used space in bytes (total - free). | long | byte | gauge |
-| system.filesystem.used.pct | The percentage of used disk space (used.bytes / total). | scaled_float | percent | gauge |
+| system.filesystem.used.pct | The percentage of used disk space (used / (used + available)). | scaled_float | percent | gauge |
 
 
 ### Disk I/O
@@ -593,23 +593,6 @@ An example event for `network` looks as following:
             }
         }
     },
-    "node_exporter": {
-        "network": {
-            "name": "ens18",
-            "in": {
-                "bytes": 5485550525,
-                "packets": 8765432,
-                "errors": 0,
-                "dropped": 42
-            },
-            "out": {
-                "bytes": 3210987654,
-                "packets": 6543210,
-                "errors": 0,
-                "dropped": 0
-            }
-        }
-    },
     "service": {
         "address": "localhost:9100",
         "name": "node"
@@ -644,15 +627,6 @@ An example event for `network` looks as following:
 | host.name | Host name. | keyword |  |  |
 | host.os.build | OS build information. | keyword |  |  |
 | host.os.codename | OS codename, if any. | keyword |  |  |
-| node_exporter.network.in.bytes | Total bytes received. | long | byte | counter |
-| node_exporter.network.in.dropped | Total incoming packets dropped. | long |  | counter |
-| node_exporter.network.in.errors | Total receive errors. | long |  | counter |
-| node_exporter.network.in.packets | Total packets received. | long |  | counter |
-| node_exporter.network.name | Network interface name. | keyword |  |  |
-| node_exporter.network.out.bytes | Total bytes transmitted. | long | byte | counter |
-| node_exporter.network.out.dropped | Total outgoing packets dropped. | long |  | counter |
-| node_exporter.network.out.errors | Total transmit errors. | long |  | counter |
-| node_exporter.network.out.packets | Total packets transmitted. | long |  | counter |
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |  |
@@ -691,9 +665,7 @@ An example event for `process_summary` looks as following:
             "summary": {
                 "total": 312,
                 "running": 2,
-                "threads": {
-                    "blocked": 0
-                }
+                "dead": 0
             }
         }
     },
@@ -745,8 +717,6 @@ An example event for `process_summary` looks as following:
 | system.process.summary.running | Number of processes in running state. | long | gauge |
 | system.process.summary.sleeping | Number of processes in sleeping state. | long | gauge |
 | system.process.summary.stopped | Number of processes in stopped state. | long | gauge |
-| system.process.summary.threads.blocked | Number of threads in blocked (uninterruptible sleep) state. | long | gauge |
-| system.process.summary.threads.running | Number of threads in running state. | long | gauge |
 | system.process.summary.total | Total number of processes (PIDs). | long | gauge |
 | system.process.summary.unknown | Number of processes in unknown state. | long | gauge |
 | system.process.summary.zombie | Number of zombie processes. | long | gauge |
@@ -775,7 +745,7 @@ An example event for `socket_summary` looks as following:
         "socket": {
             "summary": {
                 "all": {
-                    "count": 106
+                    "count": 110
                 },
                 "tcp": {
                     "all": {
@@ -788,7 +758,7 @@ An example event for `socket_summary` looks as following:
                 },
                 "udp": {
                     "all": {
-                        "count": 8
+                        "count": 12
                     },
                     "memory": 8192
                 }
@@ -798,6 +768,7 @@ An example event for `socket_summary` looks as following:
     "node_exporter": {
         "socket": {
             "tcp": {
+                "alloc": 98,
                 "inuse": 56
             },
             "all": {
@@ -840,17 +811,18 @@ An example event for `socket_summary` looks as following:
 | host.os.build | OS build information. | keyword |  |  |
 | host.os.codename | OS codename, if any. | keyword |  |  |
 | node_exporter.socket.all.used | Total sockets in use across all protocols (from /proc/net/sockstat). | long |  | gauge |
-| node_exporter.socket.tcp.inuse | Number of TCP sockets in use (active connections). | long |  | gauge |
+| node_exporter.socket.tcp.alloc | Total allocated TCP sockets (from /proc/net/sockstat TCP alloc). | long |  | gauge |
+| node_exporter.socket.tcp.inuse | Number of IPv4 TCP sockets in use (excludes LISTEN and TIME_WAIT). | long |  | gauge |
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |  |
 | system.socket.summary.all.count | Total number of TCP and UDP sockets. | long |  | gauge |
-| system.socket.summary.tcp.all.count | Total number of allocated TCP sockets. | long |  | gauge |
+| system.socket.summary.tcp.all.count | Total number of TCP sockets (IPv4 inuse + IPv6 inuse + TIME_WAIT). | long |  | gauge |
 | system.socket.summary.tcp.all.established | Number of established TCP connections. | long |  | gauge |
 | system.socket.summary.tcp.all.orphan | Number of orphaned TCP connections. | long |  | gauge |
 | system.socket.summary.tcp.all.time_wait | Number of TCP connections in TIME_WAIT state. | long |  | gauge |
 | system.socket.summary.tcp.memory | Memory used by TCP sockets in bytes. | long | byte | gauge |
-| system.socket.summary.udp.all.count | Number of UDP sockets in use. | long |  | gauge |
+| system.socket.summary.udp.all.count | Total number of UDP sockets (IPv4 inuse + IPv6 inuse). | long |  | gauge |
 | system.socket.summary.udp.memory | Memory used by UDP sockets in bytes. | long | byte | gauge |
 
 

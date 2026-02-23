@@ -25,23 +25,6 @@
                     }
                 }
             },
-            "node_exporter": {
-                "network": {
-                    "name": "ens18",
-                    "in": {
-                        "bytes": 5485550525,
-                        "packets": 8765432,
-                        "errors": 0,
-                        "dropped": 42
-                    },
-                    "out": {
-                        "bytes": 3210987654,
-                        "packets": 6543210,
-                        "errors": 0,
-                        "dropped": 0
-                    }
-                }
-            },
             "service": {
                 "address": "localhost:9100",
                 "name": "node"
