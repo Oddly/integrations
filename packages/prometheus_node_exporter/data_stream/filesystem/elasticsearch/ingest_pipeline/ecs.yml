@@ -1,0 +1,71 @@
+---
+description: ECS system.filesystem fields (removable for OTel-only mode)
+processors:
+  # Filesystem labels → system.filesystem.* dimensions
+  - set:
+      tag: set_fs_device_name
+      if: ctx.prometheus?.labels?.device != null
+      field: system.filesystem.device_name
+      copy_from: prometheus.labels.device
+  - set:
+      tag: set_fs_type
+      if: ctx.prometheus?.labels?.fstype != null
+      field: system.filesystem.type
+      copy_from: prometheus.labels.fstype
+  - set:
+      tag: set_fs_mount_point
+      if: ctx.prometheus?.labels?.mountpoint != null
+      field: system.filesystem.mount_point
+      copy_from: prometheus.labels.mountpoint
+
+  # --- Filesystem fields: system.* (System integration compatible) ---
+  - set:
+      tag: set_fs_total
+      if: ctx.prometheus?.metrics?.node_filesystem_size_bytes != null
+      field: system.filesystem.total
+      copy_from: prometheus.metrics.node_filesystem_size_bytes
+  - set:
+      tag: set_fs_free
+      if: ctx.prometheus?.metrics?.node_filesystem_free_bytes != null
+      field: system.filesystem.free
+      copy_from: prometheus.metrics.node_filesystem_free_bytes
+  - set:
+      tag: set_fs_available
+      if: ctx.prometheus?.metrics?.node_filesystem_avail_bytes != null
+      field: system.filesystem.available
+      copy_from: prometheus.metrics.node_filesystem_avail_bytes
+  - set:
+      tag: set_fs_files
+      if: ctx.prometheus?.metrics?.node_filesystem_files != null
+      field: system.filesystem.files
+      copy_from: prometheus.metrics.node_filesystem_files
+  - set:
+      tag: set_fs_free_files
+      if: ctx.prometheus?.metrics?.node_filesystem_files_free != null
+      field: system.filesystem.free_files
+      copy_from: prometheus.metrics.node_filesystem_files_free
+
+  # Compute used bytes and percentage
+  - script:
+      tag: compute_used_bytes
+      lang: painless
+      if: ctx.system?.filesystem?.total != null && ctx.system?.filesystem?.free != null
+      source: >-
+        def fs = ctx.system.filesystem;
+        long usedBytes = (long)(fs.total - fs.free);
+        fs.put('used', new HashMap());
+        fs.used.bytes = usedBytes;
+        if (fs.containsKey('available') && fs.available != null) {
+          long denom = usedBytes + (long)fs.available;
+          if (denom > 0) { fs.used.pct = (double)usedBytes / denom; }
+        } else if (fs.total > 0) {
+          fs.used.pct = (double)usedBytes / fs.total;
+        }
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline ecs failed with message {{ _ingest.on_failure_message }}"

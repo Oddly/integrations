@@ -1,0 +1,65 @@
+---
+description: OTel system metrics semantic convention fields for network
+processors:
+  # network.interface.name: OTel attribute for network interface
+  - set:
+      tag: set_network_interface_name
+      if: ctx.prometheus?.labels?.device != null
+      field: network.interface.name
+      copy_from: prometheus.labels.device
+
+  # system.network.io: bytes received/transmitted
+  - set:
+      tag: set_network_io_receive
+      if: ctx.prometheus?.metrics?.node_network_receive_bytes_total != null
+      field: system.network.io.receive
+      copy_from: prometheus.metrics.node_network_receive_bytes_total
+  - set:
+      tag: set_network_io_transmit
+      if: ctx.prometheus?.metrics?.node_network_transmit_bytes_total != null
+      field: system.network.io.transmit
+      copy_from: prometheus.metrics.node_network_transmit_bytes_total
+
+  # system.network.packets: packets received/transmitted
+  - set:
+      tag: set_network_packets_receive
+      if: ctx.prometheus?.metrics?.node_network_receive_packets_total != null
+      field: system.network.packets.receive
+      copy_from: prometheus.metrics.node_network_receive_packets_total
+  - set:
+      tag: set_network_packets_transmit
+      if: ctx.prometheus?.metrics?.node_network_transmit_packets_total != null
+      field: system.network.packets.transmit
+      copy_from: prometheus.metrics.node_network_transmit_packets_total
+
+  # system.network.errors: errors received/transmitted
+  - set:
+      tag: set_network_errors_receive
+      if: ctx.prometheus?.metrics?.node_network_receive_errs_total != null
+      field: system.network.errors.receive
+      copy_from: prometheus.metrics.node_network_receive_errs_total
+  - set:
+      tag: set_network_errors_transmit
+      if: ctx.prometheus?.metrics?.node_network_transmit_errs_total != null
+      field: system.network.errors.transmit
+      copy_from: prometheus.metrics.node_network_transmit_errs_total
+
+  # system.network.dropped: packets dropped received/transmitted
+  - set:
+      tag: set_network_dropped_receive
+      if: ctx.prometheus?.metrics?.node_network_receive_drop_total != null
+      field: system.network.dropped.receive
+      copy_from: prometheus.metrics.node_network_receive_drop_total
+  - set:
+      tag: set_network_dropped_transmit
+      if: ctx.prometheus?.metrics?.node_network_transmit_drop_total != null
+      field: system.network.dropped.transmit
+      copy_from: prometheus.metrics.node_network_transmit_drop_total
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline otel failed with message {{ _ingest.on_failure_message }}"

@@ -121,3 +121,44 @@
       metric_type: counter
       unit: s
       description: Total time spent doing I/O in seconds (native node_exporter unit).
+# --- OTel system metrics semantic convention fields ---
+- name: system.device
+  type: keyword
+  dimension: true
+  description: Disk device name (OTel attribute).
+- name: system.disk
+  type: group
+  fields:
+    - name: io.read
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes read (OTel system.disk.io direction=read).
+    - name: io.write
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes written (OTel system.disk.io direction=write).
+    - name: operations.read
+      type: long
+      metric_type: counter
+      description: Total read operations (OTel system.disk.operations direction=read).
+    - name: operations.write
+      type: long
+      metric_type: counter
+      description: Total write operations (OTel system.disk.operations direction=write).
+    - name: io_time
+      type: double
+      metric_type: counter
+      unit: s
+      description: Total time disk spent activated (OTel system.disk.io_time).
+    - name: operation_time.read
+      type: double
+      metric_type: counter
+      unit: s
+      description: Time spent on read operations (OTel system.disk.operation_time direction=read).
+    - name: operation_time.write
+      type: double
+      metric_type: counter
+      unit: s
+      description: Time spent on write operations (OTel system.disk.operation_time direction=write).

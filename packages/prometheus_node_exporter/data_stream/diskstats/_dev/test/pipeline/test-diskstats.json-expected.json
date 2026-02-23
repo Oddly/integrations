@@ -9,6 +9,7 @@
                 "dataset": "prometheus_node_exporter.diskstats"
             },
             "system": {
+                "device": "sda",
                 "diskio": {
                     "name": "sda",
                     "read": {
@@ -38,6 +39,21 @@
                         "await": 1.2582781456953642,
                         "service_time": 0.6622516556291391,
                         "busy": 8.0
+                    }
+                },
+                "disk": {
+                    "io": {
+                        "read": 1254116352,
+                        "write": 98765432320
+                    },
+                    "operations": {
+                        "read": 20287,
+                        "write": 5432100
+                    },
+                    "io_time": 1023.604,
+                    "operation_time": {
+                        "read": 6.364,
+                        "write": 1802.69
                     }
                 }
             },

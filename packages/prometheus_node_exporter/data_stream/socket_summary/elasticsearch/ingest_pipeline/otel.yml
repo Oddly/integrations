@@ -1,0 +1,22 @@
+---
+description: OTel system metrics semantic convention fields for socket summary
+processors:
+  # system.network.connection.count: TCP connection counts by state
+  - set:
+      tag: set_tcp_established
+      if: ctx.prometheus?.metrics?.node_netstat_Tcp_CurrEstab != null
+      field: system.network.connection.count.tcp.established
+      copy_from: prometheus.metrics.node_netstat_Tcp_CurrEstab
+  - set:
+      tag: set_tcp_time_wait
+      if: ctx.prometheus?.metrics?.node_sockstat_TCP_tw != null
+      field: system.network.connection.count.tcp.time_wait
+      copy_from: prometheus.metrics.node_sockstat_TCP_tw
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline otel failed with message {{ _ingest.on_failure_message }}"

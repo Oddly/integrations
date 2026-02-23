@@ -9,10 +9,13 @@
                 "dataset": "prometheus_node_exporter.filesystem"
             },
             "system": {
+                "device": "/dev/sda1",
                 "filesystem": {
                     "device_name": "/dev/sda1",
                     "type": "ext4",
                     "mount_point": "/",
+                    "mountpoint": "/",
+                    "mode": "rw",
                     "total": 107374182400,
                     "free": 53687091200,
                     "available": 48318382080,
@@ -20,6 +23,13 @@
                         "bytes": 53687091200,
                         "pct": 0.5263157894736842
                     },
+                    "usage": {
+                        "free": 53687091200,
+                        "used": 53687091200,
+                        "reserved": 5368709120
+                    },
+                    "utilization": 0.5263157894736842,
+                    "limit": 107374182400,
                     "files": 6553600,
                     "free_files": 6000000
                 }
@@ -56,10 +66,13 @@
                 "dataset": "prometheus_node_exporter.filesystem"
             },
             "system": {
+                "device": "tmpfs",
                 "filesystem": {
                     "device_name": "tmpfs",
                     "type": "tmpfs",
                     "mount_point": "/run",
+                    "mountpoint": "/run",
+                    "mode": "rw",
                     "total": 523190272,
                     "free": 523190272,
                     "available": 523190272,
@@ -67,6 +80,12 @@
                         "bytes": 0,
                         "pct": 0.0
                     },
+                    "usage": {
+                        "free": 523190272,
+                        "used": 0
+                    },
+                    "utilization": 0.0,
+                    "limit": 523190272,
                     "files": 0,
                     "free_files": 0
                 }

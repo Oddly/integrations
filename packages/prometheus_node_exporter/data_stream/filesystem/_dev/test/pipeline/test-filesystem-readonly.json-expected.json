@@ -9,10 +9,13 @@
                 "dataset": "prometheus_node_exporter.filesystem"
             },
             "system": {
+                "device": "/dev/sr0",
                 "filesystem": {
                     "device_name": "/dev/sr0",
                     "type": "iso9660",
                     "mount_point": "/mnt/cdrom",
+                    "mountpoint": "/mnt/cdrom",
+                    "mode": "ro",
                     "total": 262144000,
                     "free": 0,
                     "available": 0,
@@ -20,6 +23,12 @@
                         "bytes": 262144000,
                         "pct": 1.0
                     },
+                    "usage": {
+                        "free": 0,
+                        "used": 262144000
+                    },
+                    "utilization": 1.0,
+                    "limit": 262144000,
                     "files": 0,
                     "free_files": 0
                 }

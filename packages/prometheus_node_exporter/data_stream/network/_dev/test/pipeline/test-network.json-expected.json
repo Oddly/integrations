@@ -22,7 +22,28 @@
                         "packets": 6543210,
                         "errors": 0,
                         "dropped": 0
+                    },
+                    "io": {
+                        "receive": 5485550525,
+                        "transmit": 3210987654
+                    },
+                    "packets": {
+                        "receive": 8765432,
+                        "transmit": 6543210
+                    },
+                    "errors": {
+                        "receive": 0,
+                        "transmit": 0
+                    },
+                    "dropped": {
+                        "receive": 42,
+                        "transmit": 0
                     }
+                }
+            },
+            "network": {
+                "interface": {
+                    "name": "ens18"
                 }
             },
             "service": {

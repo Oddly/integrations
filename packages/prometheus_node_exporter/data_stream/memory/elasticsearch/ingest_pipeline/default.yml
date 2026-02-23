@@ -40,69 +40,47 @@ processors:
       field: prometheus.labels.job
       ignore_missing: true
 
-  # --- Memory fields: node.* (native) + system.* (System integration compat) ---
-  - set:
-      tag: set_node_mem_total
-      if: ctx.prometheus?.metrics?.node_memory_MemTotal_bytes != null
-      field: node_exporter.memory.total_bytes
-      copy_from: prometheus.metrics.node_memory_MemTotal_bytes
+  # Call ECS sub-pipeline (reads prometheus.metrics.*)
+  - pipeline:
+      name: '{{ IngestPipeline "ecs" }}'
+      tag: pipeline_ecs
+
+  # Call OTel sub-pipeline (reads prometheus.metrics.*)
+  - pipeline:
+      name: '{{ IngestPipeline "otel" }}'
+      tag: pipeline_otel
+
+  # --- Rename prometheus.metrics to node_exporter.memory.* (raw data) ---
   - rename:
       tag: rename_mem_total
       field: prometheus.metrics.node_memory_MemTotal_bytes
-      target_field: system.memory.total
+      target_field: node_exporter.memory.total_bytes
       ignore_missing: true
-  - set:
-      tag: set_node_mem_free
-      if: ctx.prometheus?.metrics?.node_memory_MemFree_bytes != null
-      field: node_exporter.memory.free_bytes
-      copy_from: prometheus.metrics.node_memory_MemFree_bytes
   - rename:
       tag: rename_mem_free
       field: prometheus.metrics.node_memory_MemFree_bytes
-      target_field: system.memory.free
+      target_field: node_exporter.memory.free_bytes
       ignore_missing: true
-  - set:
-      tag: set_node_mem_available
-      if: ctx.prometheus?.metrics?.node_memory_MemAvailable_bytes != null
-      field: node_exporter.memory.available_bytes
-      copy_from: prometheus.metrics.node_memory_MemAvailable_bytes
   - rename:
       tag: rename_mem_available
       field: prometheus.metrics.node_memory_MemAvailable_bytes
-      target_field: system.memory.actual.free
+      target_field: node_exporter.memory.available_bytes
       ignore_missing: true
-  - set:
-      tag: set_node_swap_total
-      if: ctx.prometheus?.metrics?.node_memory_SwapTotal_bytes != null
-      field: node_exporter.memory.swap.total_bytes
-      copy_from: prometheus.metrics.node_memory_SwapTotal_bytes
   - rename:
       tag: rename_swap_total
       field: prometheus.metrics.node_memory_SwapTotal_bytes
-      target_field: system.memory.swap.total
+      target_field: node_exporter.memory.swap.total_bytes
       ignore_missing: true
-  - set:
-      tag: set_node_swap_free
-      if: ctx.prometheus?.metrics?.node_memory_SwapFree_bytes != null
-      field: node_exporter.memory.swap.free_bytes
-      copy_from: prometheus.metrics.node_memory_SwapFree_bytes
   - rename:
       tag: rename_swap_free
       field: prometheus.metrics.node_memory_SwapFree_bytes
-      target_field: system.memory.swap.free
+      target_field: node_exporter.memory.swap.free_bytes
       ignore_missing: true
-
-  # --- Extra memory fields (node_exporter.memory.* namespace + system.memory.cached) ---
   - rename:
       tag: rename_mem_buffers
       field: prometheus.metrics.node_memory_Buffers_bytes
       target_field: node_exporter.memory.buffers_bytes
       ignore_missing: true
-  - set:
-      tag: set_system_memory_cached
-      if: ctx.prometheus?.metrics?.node_memory_Cached_bytes != null
-      field: system.memory.cached
-      copy_from: prometheus.metrics.node_memory_Cached_bytes
   - rename:
       tag: rename_mem_cached
       field: prometheus.metrics.node_memory_Cached_bytes
@@ -213,34 +191,6 @@ processors:
       field: prometheus.metrics.node_memory_Hugepagesize_bytes
       target_field: node_exporter.memory.hugepagesize_bytes
       ignore_missing: true
-
-  # Compute system-compatible derived fields
-  - script:
-      tag: compute_memory_derived
-      lang: painless
-      if: ctx.system?.memory?.total != null
-      source: >-
-        def mem = ctx.system.memory;
-        def total = mem.total;
-        if (mem.free != null) {
-          long usedBytes = (long)(total - mem.free);
-          mem.put('used', new HashMap());
-          mem.used.bytes = usedBytes;
-          if (total > 0) { mem.used.pct = (double)usedBytes / total; }
-        }
-        if (mem.containsKey('actual') && mem.actual.free != null) {
-          long actualUsedBytes = (long)(total - mem.actual.free);
-          mem.actual.put('used', new HashMap());
-          mem.actual.used.bytes = actualUsedBytes;
-          if (total > 0) { mem.actual.used.pct = (double)actualUsedBytes / total; }
-        }
-        def swap = mem.get('swap');
-        if (swap != null && swap.total != null && swap.free != null) {
-          long swapUsedBytes = (long)(swap.total - swap.free);
-          swap.put('used', new HashMap());
-          swap.used.bytes = swapUsedBytes;
-          if (swap.total > 0) { swap.used.pct = (double)swapUsedBytes / swap.total; }
-        }
 
   # Drop remaining prometheus metrics
   - remove:

@@ -26,3 +26,23 @@
       metric_type: counter
       unit: s
       description: Total seconds spent running a virtual CPU for guest operating systems (counter).
+# --- OTel system metrics semantic convention fields ---
+- name: system.cpu
+  type: group
+  fields:
+    - name: time
+      type: double
+      metric_type: counter
+      unit: s
+      description: Total CPU time in seconds per mode (OTel system.cpu.time).
+- name: cpu
+  type: group
+  fields:
+    - name: mode
+      type: keyword
+      dimension: true
+      description: CPU mode (OTel attribute). Values - user, system, idle, iowait, interrupt, softirq, steal, nice.
+    - name: logical_number
+      type: integer
+      dimension: true
+      description: CPU core logical number (OTel attribute).

@@ -1,0 +1,38 @@
+---
+description: OTel system metrics semantic convention fields for CPU
+processors:
+  # system.cpu.time: Total CPU time in seconds per mode
+  - set:
+      tag: set_system_cpu_time
+      if: ctx.prometheus?.metrics?.node_cpu_seconds_total != null
+      field: system.cpu.time
+      copy_from: prometheus.metrics.node_cpu_seconds_total
+
+  # cpu.mode: OTel attribute (maps irq → interrupt per OTel convention)
+  - set:
+      tag: set_cpu_mode
+      if: ctx.node_exporter?.cpu?.mode != null
+      field: cpu.mode
+      copy_from: node_exporter.cpu.mode
+  - set:
+      tag: map_cpu_mode_irq
+      if: ctx.cpu?.mode == 'irq'
+      field: cpu.mode
+      value: interrupt
+
+  # cpu.logical_number: Parse CPU core ID string to integer
+  - convert:
+      tag: convert_cpu_logical_number
+      if: ctx.node_exporter?.cpu?.id != null
+      field: node_exporter.cpu.id
+      target_field: cpu.logical_number
+      type: integer
+      ignore_failure: true
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline otel failed with message {{ _ingest.on_failure_message }}"

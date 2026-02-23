@@ -69,6 +69,80 @@
       metric_type: gauge
       unit: percent
       description: The percentage of used swap (swap.used.bytes / swap.total).
+# --- OTel system metrics semantic convention fields ---
+- name: system.memory
+  type: group
+  fields:
+    - name: usage.free
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free memory in bytes (OTel system.memory.usage state=free).
+    - name: usage.used
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Used memory in bytes (OTel system.memory.usage state=used).
+    - name: usage.cached
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Cached memory in bytes (OTel system.memory.usage state=cached).
+    - name: usage.buffers
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Buffer memory in bytes (OTel system.memory.usage state=buffers).
+    - name: limit
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total memory limit in bytes (OTel system.memory.limit).
+    - name: utilization
+      type: scaled_float
+      metric_type: gauge
+      unit: percent
+      scaling_factor: 10000
+      description: Memory utilization ratio (OTel system.memory.utilization).
+    - name: linux.available
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Available memory in bytes, Linux-specific (MemAvailable).
+    - name: linux.shared
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Shared memory in bytes, Linux-specific (Shmem).
+    - name: linux.slab.usage.reclaimable
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Reclaimable slab memory in bytes (SReclaimable).
+    - name: linux.slab.usage.unreclaimable
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Unreclaimable slab memory in bytes (SUnreclaim).
+- name: system.paging
+  type: group
+  fields:
+    - name: usage.free
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free swap space in bytes (OTel system.paging.usage state=free).
+    - name: usage.used
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Used swap space in bytes (OTel system.paging.usage state=used).
+    - name: utilization
+      type: scaled_float
+      metric_type: gauge
+      unit: percent
+      scaling_factor: 10000
+      description: Swap utilization ratio (OTel system.paging.utilization).
 # --- All node_exporter memory fields ---
 - name: node_exporter.memory
   type: group

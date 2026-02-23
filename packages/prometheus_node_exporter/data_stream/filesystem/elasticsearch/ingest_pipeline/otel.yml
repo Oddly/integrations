@@ -1,0 +1,77 @@
+---
+description: OTel system metrics semantic convention fields for filesystem
+processors:
+  # OTel attributes
+  - set:
+      tag: set_system_device
+      if: ctx.prometheus?.labels?.device != null
+      field: system.device
+      copy_from: prometheus.labels.device
+  - set:
+      tag: set_fs_mountpoint
+      if: ctx.prometheus?.labels?.mountpoint != null
+      field: system.filesystem.mountpoint
+      copy_from: prometheus.labels.mountpoint
+  - set:
+      tag: set_fs_type_otel
+      if: ctx.prometheus?.labels?.fstype != null
+      field: system.filesystem.type
+      copy_from: prometheus.labels.fstype
+
+  # system.filesystem.mode: derive from node_exporter.filesystem.readonly (ro/rw)
+  - set:
+      tag: set_fs_mode_rw
+      if: ctx.prometheus?.metrics?.node_filesystem_readonly != null && ctx.prometheus.metrics.node_filesystem_readonly == 0
+      field: system.filesystem.mode
+      value: rw
+  - set:
+      tag: set_fs_mode_ro
+      if: ctx.prometheus?.metrics?.node_filesystem_readonly != null && ctx.prometheus.metrics.node_filesystem_readonly != 0
+      field: system.filesystem.mode
+      value: ro
+
+  # system.filesystem.usage (state-suffixed): used, free, reserved
+  - set:
+      tag: set_fs_usage_free
+      if: ctx.prometheus?.metrics?.node_filesystem_free_bytes != null
+      field: system.filesystem.usage.free
+      copy_from: prometheus.metrics.node_filesystem_free_bytes
+
+  # system.filesystem.limit: total filesystem size
+  - set:
+      tag: set_fs_limit
+      if: ctx.prometheus?.metrics?.node_filesystem_size_bytes != null
+      field: system.filesystem.limit
+      copy_from: prometheus.metrics.node_filesystem_size_bytes
+
+  # Computed fields: usage.used, usage.reserved, utilization
+  - script:
+      tag: compute_otel_fs_derived
+      lang: painless
+      if: ctx.prometheus?.metrics?.node_filesystem_size_bytes != null && ctx.prometheus?.metrics?.node_filesystem_free_bytes != null
+      source: >-
+        def pm = ctx.prometheus.metrics;
+        double total = pm.node_filesystem_size_bytes;
+        double free = pm.node_filesystem_free_bytes;
+        long usedBytes = (long)(total - free);
+        if (ctx.system == null) ctx.system = new HashMap();
+        if (ctx.system.filesystem == null) ctx.system.put('filesystem', new HashMap());
+        if (ctx.system.filesystem.usage == null) ctx.system.filesystem.put('usage', new HashMap());
+        ctx.system.filesystem.usage.used = usedBytes;
+        if (pm.containsKey('node_filesystem_avail_bytes') && pm.node_filesystem_avail_bytes != null) {
+          long available = (long)pm.node_filesystem_avail_bytes;
+          long reserved = (long)(free - available);
+          if (reserved > 0) ctx.system.filesystem.usage.reserved = reserved;
+          long denom = usedBytes + available;
+          if (denom > 0) ctx.system.filesystem.put('utilization', (double)usedBytes / denom);
+        } else if (total > 0) {
+          ctx.system.filesystem.put('utilization', (double)usedBytes / total);
+        }
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline otel failed with message {{ _ingest.on_failure_message }}"

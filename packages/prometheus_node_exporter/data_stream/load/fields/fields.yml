@@ -50,3 +50,23 @@
       metric_type: gauge
       unit: ms
       description: System uptime in milliseconds, computed from node_boot_time_seconds.
+    - name: uptime.seconds
+      type: long
+      metric_type: gauge
+      unit: s
+      description: System uptime in seconds (OTel system.uptime).
+    - name: cpu.load_average.1m
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 100
+      description: System load average over 1 minute (OTel system.cpu.load_average.1m).
+    - name: cpu.load_average.5m
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 100
+      description: System load average over 5 minutes (OTel system.cpu.load_average.5m).
+    - name: cpu.load_average.15m
+      type: scaled_float
+      metric_type: gauge
+      scaling_factor: 100
+      description: System load average over 15 minutes (OTel system.cpu.load_average.15m).

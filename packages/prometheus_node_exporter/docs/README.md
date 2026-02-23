@@ -84,6 +84,9 @@ An example event for `load` looks as following:
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |  |
+| system.cpu.load_average.15m | System load average over 15 minutes (OTel system.cpu.load_average.15m). | scaled_float |  | gauge |
+| system.cpu.load_average.1m | System load average over 1 minute (OTel system.cpu.load_average.1m). | scaled_float |  | gauge |
+| system.cpu.load_average.5m | System load average over 5 minutes (OTel system.cpu.load_average.5m). | scaled_float |  | gauge |
 | system.load.1 | System load average over 1 minute. | scaled_float |  | gauge |
 | system.load.15 | System load average over 15 minutes. | scaled_float |  | gauge |
 | system.load.5 | System load average over 5 minutes. | scaled_float |  | gauge |
@@ -92,6 +95,7 @@ An example event for `load` looks as following:
 | system.load.norm.15 | Normalized system load average over 15 minutes (load / cores). | scaled_float | percent | gauge |
 | system.load.norm.5 | Normalized system load average over 5 minutes (load / cores). | scaled_float | percent | gauge |
 | system.uptime.duration.ms | System uptime in milliseconds, computed from node_boot_time_seconds. | long | ms | gauge |
+| system.uptime.seconds | System uptime in seconds (OTel system.uptime). | long | s | gauge |
 
 
 ### CPU
@@ -147,6 +151,8 @@ An example event for `cpu` looks as following:
 | cloud.provider | Cloud provider name. | keyword |  |  |
 | cloud.region | Cloud region. | keyword |  |  |
 | container.id | Container ID. | keyword |  |  |
+| cpu.logical_number | CPU core logical number (OTel attribute). | integer |  |  |
+| cpu.mode | CPU mode (OTel attribute). Values - user, system, idle, iowait, interrupt, softirq, steal, nice. | keyword |  |  |
 | data_stream.dataset | Data stream dataset. | constant_keyword |  |  |
 | data_stream.namespace | Data stream namespace. | constant_keyword |  |  |
 | data_stream.type | Data stream type. | constant_keyword |  |  |
@@ -166,6 +172,7 @@ An example event for `cpu` looks as following:
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |  |
+| system.cpu.time | Total CPU time in seconds per mode (OTel system.cpu.time). | double | s | counter |
 
 
 ### Memory
@@ -304,13 +311,26 @@ An example event for `memory` looks as following:
 | system.memory.actual.used.pct | The percentage of actual used memory (actual.used.bytes / total). | scaled_float | percent | gauge |
 | system.memory.cached | Total cached memory in bytes (Cached). | long | byte | gauge |
 | system.memory.free | Free RAM in bytes (MemFree). | long | byte | gauge |
+| system.memory.limit | Total memory limit in bytes (OTel system.memory.limit). | long | byte | gauge |
+| system.memory.linux.available | Available memory in bytes, Linux-specific (MemAvailable). | long | byte | gauge |
+| system.memory.linux.shared | Shared memory in bytes, Linux-specific (Shmem). | long | byte | gauge |
+| system.memory.linux.slab.usage.reclaimable | Reclaimable slab memory in bytes (SReclaimable). | long | byte | gauge |
+| system.memory.linux.slab.usage.unreclaimable | Unreclaimable slab memory in bytes (SUnreclaim). | long | byte | gauge |
 | system.memory.swap.free | Free swap space in bytes. | long | byte | gauge |
 | system.memory.swap.total | Total swap space in bytes. | long | byte | gauge |
 | system.memory.swap.used.bytes | Used swap space in bytes (total - free). | long | byte | gauge |
 | system.memory.swap.used.pct | The percentage of used swap (swap.used.bytes / swap.total). | scaled_float | percent | gauge |
 | system.memory.total | Total usable RAM in bytes. | long | byte | gauge |
+| system.memory.usage.buffers | Buffer memory in bytes (OTel system.memory.usage state=buffers). | long | byte | gauge |
+| system.memory.usage.cached | Cached memory in bytes (OTel system.memory.usage state=cached). | long | byte | gauge |
+| system.memory.usage.free | Free memory in bytes (OTel system.memory.usage state=free). | long | byte | gauge |
+| system.memory.usage.used | Used memory in bytes (OTel system.memory.usage state=used). | long | byte | gauge |
 | system.memory.used.bytes | Used RAM in bytes (total - free). | long | byte | gauge |
 | system.memory.used.pct | The percentage of used memory (used.bytes / total). | scaled_float | percent | gauge |
+| system.memory.utilization | Memory utilization ratio (OTel system.memory.utilization). | scaled_float | percent | gauge |
+| system.paging.usage.free | Free swap space in bytes (OTel system.paging.usage state=free). | long | byte | gauge |
+| system.paging.usage.used | Used swap space in bytes (OTel system.paging.usage state=used). | long | byte | gauge |
+| system.paging.utilization | Swap utilization ratio (OTel system.paging.utilization). | scaled_float | percent | gauge |
 
 
 ### Filesystem
@@ -411,16 +431,24 @@ An example event for `filesystem` looks as following:
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |  |
+| system.device | Filesystem device name (OTel attribute). | keyword |  |  |
 | system.filesystem.available | Available space in bytes (for unprivileged users). | long | byte | gauge |
 | system.filesystem.device_name | Filesystem device name. | keyword |  |  |
 | system.filesystem.files | Total number of inodes. | long |  | gauge |
 | system.filesystem.free | Free space in bytes (including reserved blocks). | long | byte | gauge |
 | system.filesystem.free_files | Number of free inodes. | long |  | gauge |
+| system.filesystem.limit | Total filesystem size (OTel system.filesystem.limit). | long | byte | gauge |
+| system.filesystem.mode | Filesystem mount mode (ro/rw), derived from node_exporter.filesystem.readonly. | keyword |  |  |
 | system.filesystem.mount_point | Filesystem mount point. | keyword |  |  |
+| system.filesystem.mountpoint | Filesystem mount point (OTel attribute). | keyword |  |  |
 | system.filesystem.total | Total filesystem size in bytes. | long | byte | gauge |
 | system.filesystem.type | Filesystem type (ext4, xfs, tmpfs, etc.). | keyword |  |  |
+| system.filesystem.usage.free | Free space in bytes (OTel system.filesystem.usage state=free). | long | byte | gauge |
+| system.filesystem.usage.reserved | Reserved space in bytes (OTel system.filesystem.usage state=reserved). | long | byte | gauge |
+| system.filesystem.usage.used | Used space in bytes (OTel system.filesystem.usage state=used). | long | byte | gauge |
 | system.filesystem.used.bytes | Used space in bytes (total - free). | long | byte | gauge |
 | system.filesystem.used.pct | The percentage of used disk space (used / (used + available)). | scaled_float | percent | gauge |
+| system.filesystem.utilization | Filesystem utilization ratio (OTel system.filesystem.utilization). | scaled_float | percent | gauge |
 
 
 ### Disk I/O
@@ -538,6 +566,14 @@ An example event for `diskstats` looks as following:
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |  |
+| system.device | Disk device name (OTel attribute). | keyword |  |  |
+| system.disk.io.read | Total bytes read (OTel system.disk.io direction=read). | long | byte | counter |
+| system.disk.io.write | Total bytes written (OTel system.disk.io direction=write). | long | byte | counter |
+| system.disk.io_time | Total time disk spent activated (OTel system.disk.io_time). | double | s | counter |
+| system.disk.operation_time.read | Time spent on read operations (OTel system.disk.operation_time direction=read). | double | s | counter |
+| system.disk.operation_time.write | Time spent on write operations (OTel system.disk.operation_time direction=write). | double | s | counter |
+| system.disk.operations.read | Total read operations (OTel system.disk.operations direction=read). | long |  | counter |
+| system.disk.operations.write | Total write operations (OTel system.disk.operations direction=write). | long |  | counter |
 | system.diskio.io.time | Total time spent doing I/O in milliseconds. | long |  | counter |
 | system.diskio.iostat.await | Average time for I/O requests in milliseconds. | double |  | gauge |
 | system.diskio.iostat.busy | Percentage of time the device was busy with I/O operations. | double |  | gauge |
@@ -627,18 +663,27 @@ An example event for `network` looks as following:
 | host.name | Host name. | keyword |  |  |
 | host.os.build | OS build information. | keyword |  |  |
 | host.os.codename | OS codename, if any. | keyword |  |  |
+| network.interface.name | Network interface name (OTel attribute). | keyword |  |  |
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |  |
+| system.network.dropped.receive | Total incoming packets dropped (OTel system.network.dropped direction=receive). | long |  | counter |
+| system.network.dropped.transmit | Total outgoing packets dropped (OTel system.network.dropped direction=transmit). | long |  | counter |
+| system.network.errors.receive | Total receive errors (OTel system.network.errors direction=receive). | long |  | counter |
+| system.network.errors.transmit | Total transmit errors (OTel system.network.errors direction=transmit). | long |  | counter |
 | system.network.in.bytes | Total bytes received. | long | byte | counter |
 | system.network.in.dropped | Total incoming packets dropped. | long |  | counter |
 | system.network.in.errors | Total receive errors. | long |  | counter |
 | system.network.in.packets | Total packets received. | long |  | counter |
+| system.network.io.receive | Total bytes received (OTel system.network.io direction=receive). | long | byte | counter |
+| system.network.io.transmit | Total bytes transmitted (OTel system.network.io direction=transmit). | long | byte | counter |
 | system.network.name | Network interface name. | keyword |  |  |
 | system.network.out.bytes | Total bytes transmitted. | long | byte | counter |
 | system.network.out.dropped | Total outgoing packets dropped. | long |  | counter |
 | system.network.out.errors | Total transmit errors. | long |  | counter |
 | system.network.out.packets | Total packets transmitted. | long |  | counter |
+| system.network.packets.receive | Total packets received (OTel system.network.packets direction=receive). | long |  | counter |
+| system.network.packets.transmit | Total packets transmitted (OTel system.network.packets direction=transmit). | long |  | counter |
 
 
 ### Process Summary
@@ -712,6 +757,7 @@ An example event for `process_summary` looks as following:
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |
+| system.process.count.running | Number of running processes (OTel system.process.count status=running). | long | gauge |
 | system.process.summary.dead | Number of processes in uninterruptible sleep (D state). | long | gauge |
 | system.process.summary.idle | Number of processes in idle state. | long | gauge |
 | system.process.summary.running | Number of processes in running state. | long | gauge |
@@ -816,6 +862,8 @@ An example event for `socket_summary` looks as following:
 | prometheus.labels.\* | Prometheus metric labels. | keyword |  |  |
 | service.address | Address where data about this service was collected from. This should be a URI, network address (ipv4:port or [ipv6]:port) or a resource path (sockets). | keyword |  |  |
 | service.name | Name of the service data is collected from. The name of the service is normally user given. This allows for distributed services that run on multiple hosts to correlate the related instances based on the name. In the case of Elasticsearch the `service.name` could contain the cluster name. For Beats the `service.name` is by default a copy of the `service.type` field if no name is specified. | keyword |  |  |
+| system.network.connection.count.tcp.established | Established TCP connections (OTel system.network.connections state=established). | long |  | gauge |
+| system.network.connection.count.tcp.time_wait | TCP connections in TIME_WAIT state (OTel system.network.connections state=time_wait). | long |  | gauge |
 | system.socket.summary.all.count | Total number of TCP and UDP sockets. | long |  | gauge |
 | system.socket.summary.tcp.all.count | Total number of TCP sockets (IPv4 inuse + IPv6 inuse + TIME_WAIT). | long |  | gauge |
 | system.socket.summary.tcp.all.established | Number of established TCP connections. | long |  | gauge |

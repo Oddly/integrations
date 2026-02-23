@@ -1,3 +1,16 @@
+- version: "0.9.0"
+  changes:
+    - description: Add OTel system metrics semantic convention fields alongside ECS fields.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/99999
+    - description: Split ingest pipelines into independent ECS and OTel sub-pipelines.
+      type: enhancement
+      link: https://github.com/elastic/integrations/pull/99999
+- version: "0.8.0"
+  changes:
+    - description: Fix process_summary mapping bug, remove redundant network namespace, fix docs.
+      type: bugfix
+      link: https://github.com/elastic/integrations/pull/99999
 - version: "0.7.0"
   changes:
     - description: Fix filesystem used.pct formula and socket_summary semantic mismatches.

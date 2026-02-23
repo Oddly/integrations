@@ -1,0 +1,26 @@
+---
+description: ECS system.process.summary fields (removable for OTel-only mode)
+processors:
+  - set:
+      tag: set_processes_total
+      if: ctx.prometheus?.metrics?.node_processes_pids != null
+      field: system.process.summary.total
+      copy_from: prometheus.metrics.node_processes_pids
+  - set:
+      tag: set_procs_running
+      if: ctx.prometheus?.metrics?.node_procs_running != null
+      field: system.process.summary.running
+      copy_from: prometheus.metrics.node_procs_running
+  - set:
+      tag: set_procs_blocked
+      if: ctx.prometheus?.metrics?.node_procs_blocked != null
+      field: system.process.summary.dead
+      copy_from: prometheus.metrics.node_procs_blocked
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline ecs failed with message {{ _ingest.on_failure_message }}"

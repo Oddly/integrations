@@ -1,3 +1,4 @@
 dynamic_fields:
   event.ingested: ".*"
   system.uptime.duration.ms: ".*"
+  system.uptime.seconds: ".*"

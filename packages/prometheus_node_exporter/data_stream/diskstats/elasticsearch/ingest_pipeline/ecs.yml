@@ -1,0 +1,109 @@
+---
+description: ECS system.diskio fields (removable for OTel-only mode)
+processors:
+  # Device label → system.diskio.name dimension
+  - set:
+      tag: set_diskio_name
+      if: ctx.prometheus?.labels?.device != null
+      field: system.diskio.name
+      copy_from: prometheus.labels.device
+
+  # --- Counter fields: use_types puts counters at prometheus.<metric>.counter ---
+  - set:
+      tag: set_system_reads_completed
+      if: ctx.prometheus?.node_disk_reads_completed_total?.counter != null
+      field: system.diskio.read.count
+      copy_from: prometheus.node_disk_reads_completed_total.counter
+  - set:
+      tag: set_system_writes_completed
+      if: ctx.prometheus?.node_disk_writes_completed_total?.counter != null
+      field: system.diskio.write.count
+      copy_from: prometheus.node_disk_writes_completed_total.counter
+  - set:
+      tag: set_system_read_bytes
+      if: ctx.prometheus?.node_disk_read_bytes_total?.counter != null
+      field: system.diskio.read.bytes
+      copy_from: prometheus.node_disk_read_bytes_total.counter
+  - set:
+      tag: set_system_written_bytes
+      if: ctx.prometheus?.node_disk_written_bytes_total?.counter != null
+      field: system.diskio.write.bytes
+      copy_from: prometheus.node_disk_written_bytes_total.counter
+
+  # Time fields: convert seconds to milliseconds for system-compatible fields
+  - script:
+      tag: convert_time_to_ms
+      lang: painless
+      source: >-
+        def p = ctx.prometheus;
+        if (p == null) return;
+        def diskio = ctx.system?.diskio;
+        if (diskio == null) { ctx.system.put('diskio', new HashMap()); diskio = ctx.system.diskio; }
+        def read_s = p.node_disk_read_time_seconds_total?.counter;
+        if (read_s != null) {
+          if (diskio.read == null) diskio.put('read', new HashMap());
+          diskio.read.time = (long)(read_s * 1000);
+        }
+        def write_s = p.node_disk_write_time_seconds_total?.counter;
+        if (write_s != null) {
+          if (diskio.write == null) diskio.put('write', new HashMap());
+          diskio.write.time = (long)(write_s * 1000);
+        }
+        def io_s = p.node_disk_io_time_seconds_total?.counter;
+        if (io_s != null) {
+          if (diskio.io == null) diskio.put('io', new HashMap());
+          diskio.io.time = (long)(io_s * 1000);
+        }
+
+  # Compute iostat-style metrics from rate_counters data
+  - script:
+      tag: compute_iostat
+      lang: painless
+      if: ctx.prometheus?.node_disk_reads_completed_total?.rate != null
+      source: >-
+        def p = ctx.prometheus;
+        def read_rate = p.node_disk_reads_completed_total?.rate;
+        def write_rate = p.node_disk_writes_completed_total?.rate;
+        def read_time_rate = p.node_disk_read_time_seconds_total?.rate;
+        def write_time_rate = p.node_disk_write_time_seconds_total?.rate;
+        def io_time_rate = p.node_disk_io_time_seconds_total?.rate;
+        def read_bytes_rate = p.node_disk_read_bytes_total?.rate;
+        def write_bytes_rate = p.node_disk_written_bytes_total?.rate;
+        def iostat = new HashMap();
+        if (read_rate != null) { iostat.put('read', new HashMap()); iostat.read.request_per_sec = read_rate; }
+        if (write_rate != null) { iostat.put('write', new HashMap()); iostat.write.request_per_sec = write_rate; }
+        if (read_bytes_rate != null) {
+          if (iostat.read == null) iostat.put('read', new HashMap());
+          iostat.read.per_sec_bytes = read_bytes_rate;
+        }
+        if (write_bytes_rate != null) {
+          if (iostat.write == null) iostat.put('write', new HashMap());
+          iostat.write.per_sec_bytes = write_bytes_rate;
+        }
+        double total_ops = (read_rate != null ? read_rate : 0.0) + (write_rate != null ? write_rate : 0.0);
+        if (total_ops > 0) {
+          double total_time_rate = (read_time_rate != null ? read_time_rate : 0.0) + (write_time_rate != null ? write_time_rate : 0.0);
+          iostat.await = (total_time_rate / total_ops) * 1000.0;
+          if (read_rate != null && read_rate > 0 && read_time_rate != null) {
+            iostat.read.await = (read_time_rate / read_rate) * 1000.0;
+          }
+          if (write_rate != null && write_rate > 0 && write_time_rate != null) {
+            iostat.write.await = (write_time_rate / write_rate) * 1000.0;
+          }
+          if (io_time_rate != null) {
+            iostat.service_time = (io_time_rate / total_ops) * 1000.0;
+          }
+        }
+        if (io_time_rate != null) {
+          iostat.busy = io_time_rate * 100.0;
+        }
+        if (ctx.system.diskio == null) ctx.system.diskio = new HashMap();
+        ctx.system.diskio.iostat = iostat;
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline ecs failed with message {{ _ingest.on_failure_message }}"

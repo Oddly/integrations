@@ -9,6 +9,7 @@
                 "dataset": "prometheus_node_exporter.diskstats"
             },
             "system": {
+                "device": "sda",
                 "diskio": {
                     "name": "sda",
                     "read": {
@@ -34,6 +35,21 @@
                             "per_sec_bytes": 0.0
                         },
                         "busy": 0.0
+                    }
+                },
+                "disk": {
+                    "io": {
+                        "read": 10730496,
+                        "write": 5767168
+                    },
+                    "operations": {
+                        "read": 597,
+                        "write": 345
+                    },
+                    "io_time": 4.171,
+                    "operation_time": {
+                        "read": 4.467,
+                        "write": 0.514
                     }
                 }
             },

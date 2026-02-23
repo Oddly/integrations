@@ -62,7 +62,12 @@ processors:
       field: prometheus.labels.mode
       ignore_missing: true
 
-  # Rename CPU metrics
+  # Call OTel sub-pipeline (reads from prometheus.metrics.* and node_exporter.cpu.*)
+  - pipeline:
+      name: '{{ IngestPipeline "otel" }}'
+      tag: pipeline_otel
+
+  # Rename CPU metrics to node_exporter.* namespace
   - rename:
       tag: rename_cpu_seconds_total
       field: prometheus.metrics.node_cpu_seconds_total

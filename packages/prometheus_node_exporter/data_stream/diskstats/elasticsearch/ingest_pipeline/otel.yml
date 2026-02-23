@@ -1,0 +1,60 @@
+---
+description: OTel system metrics semantic convention fields for disk I/O
+processors:
+  # system.device: OTel attribute for disk device
+  - set:
+      tag: set_system_device
+      if: ctx.prometheus?.labels?.device != null
+      field: system.device
+      copy_from: prometheus.labels.device
+
+  # system.disk.io: bytes read/written (direction-suffixed)
+  - set:
+      tag: set_disk_io_read
+      if: ctx.prometheus?.node_disk_read_bytes_total?.counter != null
+      field: system.disk.io.read
+      copy_from: prometheus.node_disk_read_bytes_total.counter
+  - set:
+      tag: set_disk_io_write
+      if: ctx.prometheus?.node_disk_written_bytes_total?.counter != null
+      field: system.disk.io.write
+      copy_from: prometheus.node_disk_written_bytes_total.counter
+
+  # system.disk.operations: operations read/written (direction-suffixed)
+  - set:
+      tag: set_disk_operations_read
+      if: ctx.prometheus?.node_disk_reads_completed_total?.counter != null
+      field: system.disk.operations.read
+      copy_from: prometheus.node_disk_reads_completed_total.counter
+  - set:
+      tag: set_disk_operations_write
+      if: ctx.prometheus?.node_disk_writes_completed_total?.counter != null
+      field: system.disk.operations.write
+      copy_from: prometheus.node_disk_writes_completed_total.counter
+
+  # system.disk.io_time: total I/O time (seconds, not ms)
+  - set:
+      tag: set_disk_io_time
+      if: ctx.prometheus?.node_disk_io_time_seconds_total?.counter != null
+      field: system.disk.io_time
+      copy_from: prometheus.node_disk_io_time_seconds_total.counter
+
+  # system.disk.operation_time: per-direction operation time (direction-suffixed, seconds)
+  - set:
+      tag: set_disk_operation_time_read
+      if: ctx.prometheus?.node_disk_read_time_seconds_total?.counter != null
+      field: system.disk.operation_time.read
+      copy_from: prometheus.node_disk_read_time_seconds_total.counter
+  - set:
+      tag: set_disk_operation_time_write
+      if: ctx.prometheus?.node_disk_write_time_seconds_total?.counter != null
+      field: system.disk.operation_time.write
+      copy_from: prometheus.node_disk_write_time_seconds_total.counter
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline otel failed with message {{ _ingest.on_failure_message }}"

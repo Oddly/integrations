@@ -30,6 +30,30 @@
                         "used": {
                             "bytes": 0
                         }
+                    },
+                    "usage": {
+                        "free": 536870912,
+                        "used": 3758096384,
+                        "cached": 1073741824,
+                        "buffers": 134217728
+                    },
+                    "limit": 4294967296,
+                    "utilization": 0.875,
+                    "linux": {
+                        "available": 2147483648,
+                        "shared": 33554432,
+                        "slab": {
+                            "usage": {
+                                "reclaimable": 201326592,
+                                "unreclaimable": 67108864
+                            }
+                        }
+                    }
+                },
+                "paging": {
+                    "usage": {
+                        "free": 0,
+                        "used": 0
                     }
                 }
             },

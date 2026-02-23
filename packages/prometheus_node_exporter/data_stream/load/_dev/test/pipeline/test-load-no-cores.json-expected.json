@@ -17,6 +17,14 @@
                 "uptime": {
                     "duration": {
                         "ms": 0
+                    },
+                    "seconds": 0
+                },
+                "cpu": {
+                    "load_average": {
+                        "1m": 2.15,
+                        "5m": 1.89,
+                        "15m": 1.42
                     }
                 }
             },

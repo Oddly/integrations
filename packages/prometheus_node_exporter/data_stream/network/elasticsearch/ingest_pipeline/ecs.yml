@@ -1,0 +1,59 @@
+---
+description: ECS system.network fields (removable for OTel-only mode)
+processors:
+  # Device label → system.network.name dimension
+  - set:
+      tag: set_network_name
+      if: ctx.prometheus?.labels?.device != null
+      field: system.network.name
+      copy_from: prometheus.labels.device
+
+  # --- Network fields: system.* (System integration compatible) ---
+  - set:
+      tag: set_receive_bytes
+      if: ctx.prometheus?.metrics?.node_network_receive_bytes_total != null
+      field: system.network.in.bytes
+      copy_from: prometheus.metrics.node_network_receive_bytes_total
+  - set:
+      tag: set_transmit_bytes
+      if: ctx.prometheus?.metrics?.node_network_transmit_bytes_total != null
+      field: system.network.out.bytes
+      copy_from: prometheus.metrics.node_network_transmit_bytes_total
+  - set:
+      tag: set_receive_packets
+      if: ctx.prometheus?.metrics?.node_network_receive_packets_total != null
+      field: system.network.in.packets
+      copy_from: prometheus.metrics.node_network_receive_packets_total
+  - set:
+      tag: set_transmit_packets
+      if: ctx.prometheus?.metrics?.node_network_transmit_packets_total != null
+      field: system.network.out.packets
+      copy_from: prometheus.metrics.node_network_transmit_packets_total
+  - set:
+      tag: set_receive_errs
+      if: ctx.prometheus?.metrics?.node_network_receive_errs_total != null
+      field: system.network.in.errors
+      copy_from: prometheus.metrics.node_network_receive_errs_total
+  - set:
+      tag: set_transmit_errs
+      if: ctx.prometheus?.metrics?.node_network_transmit_errs_total != null
+      field: system.network.out.errors
+      copy_from: prometheus.metrics.node_network_transmit_errs_total
+  - set:
+      tag: set_receive_drop
+      if: ctx.prometheus?.metrics?.node_network_receive_drop_total != null
+      field: system.network.in.dropped
+      copy_from: prometheus.metrics.node_network_receive_drop_total
+  - set:
+      tag: set_transmit_drop
+      if: ctx.prometheus?.metrics?.node_network_transmit_drop_total != null
+      field: system.network.out.dropped
+      copy_from: prometheus.metrics.node_network_transmit_drop_total
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline ecs failed with message {{ _ingest.on_failure_message }}"

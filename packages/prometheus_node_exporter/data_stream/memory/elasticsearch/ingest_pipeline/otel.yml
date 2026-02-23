@@ -1,0 +1,92 @@
+---
+description: OTel system metrics semantic convention fields for memory
+processors:
+  # --- system.memory.usage (state-suffixed) ---
+  - set:
+      tag: set_memory_usage_free
+      if: ctx.prometheus?.metrics?.node_memory_MemFree_bytes != null
+      field: system.memory.usage.free
+      copy_from: prometheus.metrics.node_memory_MemFree_bytes
+  - set:
+      tag: set_memory_usage_cached
+      if: ctx.prometheus?.metrics?.node_memory_Cached_bytes != null
+      field: system.memory.usage.cached
+      copy_from: prometheus.metrics.node_memory_Cached_bytes
+  - set:
+      tag: set_memory_usage_buffers
+      if: ctx.prometheus?.metrics?.node_memory_Buffers_bytes != null
+      field: system.memory.usage.buffers
+      copy_from: prometheus.metrics.node_memory_Buffers_bytes
+
+  # system.memory.limit: total memory
+  - set:
+      tag: set_memory_limit
+      if: ctx.prometheus?.metrics?.node_memory_MemTotal_bytes != null
+      field: system.memory.limit
+      copy_from: prometheus.metrics.node_memory_MemTotal_bytes
+
+  # --- system.memory.linux: Linux-specific memory fields ---
+  - set:
+      tag: set_memory_linux_available
+      if: ctx.prometheus?.metrics?.node_memory_MemAvailable_bytes != null
+      field: system.memory.linux.available
+      copy_from: prometheus.metrics.node_memory_MemAvailable_bytes
+  - set:
+      tag: set_memory_linux_shared
+      if: ctx.prometheus?.metrics?.node_memory_Shmem_bytes != null
+      field: system.memory.linux.shared
+      copy_from: prometheus.metrics.node_memory_Shmem_bytes
+  - set:
+      tag: set_memory_linux_slab_reclaimable
+      if: ctx.prometheus?.metrics?.node_memory_SReclaimable_bytes != null
+      field: system.memory.linux.slab.usage.reclaimable
+      copy_from: prometheus.metrics.node_memory_SReclaimable_bytes
+  - set:
+      tag: set_memory_linux_slab_unreclaimable
+      if: ctx.prometheus?.metrics?.node_memory_SUnreclaim_bytes != null
+      field: system.memory.linux.slab.usage.unreclaimable
+      copy_from: prometheus.metrics.node_memory_SUnreclaim_bytes
+
+  # --- system.paging (swap) ---
+  - set:
+      tag: set_paging_usage_free
+      if: ctx.prometheus?.metrics?.node_memory_SwapFree_bytes != null
+      field: system.paging.usage.free
+      copy_from: prometheus.metrics.node_memory_SwapFree_bytes
+
+  # Computed fields: usage.used, utilization, paging.usage.used, paging.utilization
+  - script:
+      tag: compute_otel_memory_derived
+      lang: painless
+      if: ctx.prometheus?.metrics?.node_memory_MemTotal_bytes != null
+      source: >-
+        def pm = ctx.prometheus.metrics;
+        double total = pm.node_memory_MemTotal_bytes;
+        double free = pm.containsKey('node_memory_MemFree_bytes') ? pm.node_memory_MemFree_bytes : 0.0;
+        long usedBytes = (long)(total - free);
+        if (ctx.system == null) ctx.system = new HashMap();
+        if (ctx.system.memory == null) ctx.system.put('memory', new HashMap());
+        if (ctx.system.memory.usage == null) ctx.system.memory.put('usage', new HashMap());
+        ctx.system.memory.usage.used = usedBytes;
+        if (total > 0) {
+          ctx.system.memory.put('utilization', (double)usedBytes / total);
+        }
+        if (pm.containsKey('node_memory_SwapTotal_bytes') && pm.containsKey('node_memory_SwapFree_bytes')) {
+          double swapTotal = pm.node_memory_SwapTotal_bytes;
+          double swapFree = pm.node_memory_SwapFree_bytes;
+          long swapUsed = (long)(swapTotal - swapFree);
+          if (ctx.system.paging == null) ctx.system.put('paging', new HashMap());
+          if (ctx.system.paging.usage == null) ctx.system.paging.put('usage', new HashMap());
+          ctx.system.paging.usage.used = swapUsed;
+          if (swapTotal > 0) {
+            ctx.system.paging.put('utilization', (double)swapUsed / swapTotal);
+          }
+        }
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline otel failed with message {{ _ingest.on_failure_message }}"

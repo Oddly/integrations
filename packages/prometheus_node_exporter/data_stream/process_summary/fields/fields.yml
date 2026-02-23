@@ -40,6 +40,14 @@
       type: long
       metric_type: gauge
       description: Number of processes in unknown state.
+# --- OTel system metrics semantic convention fields ---
+- name: system
+  type: group
+  fields:
+    - name: process.count.running
+      type: long
+      metric_type: gauge
+      description: Number of running processes (OTel system.process.count status=running).
 - name: node_exporter
   type: group
   fields:

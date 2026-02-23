@@ -102,3 +102,44 @@
       type: double
       metric_type: gauge
       description: Whether a device error occurred while getting stats (1 = error, 0 = ok).
+# --- OTel system metrics semantic convention fields ---
+- name: system.device
+  type: keyword
+  dimension: true
+  description: Filesystem device name (OTel attribute).
+- name: system.filesystem
+  type: group
+  fields:
+    - name: mountpoint
+      type: keyword
+      dimension: true
+      description: Filesystem mount point (OTel attribute).
+    - name: mode
+      type: keyword
+      description: Filesystem mount mode (ro/rw), derived from node_exporter.filesystem.readonly.
+    - name: usage.free
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Free space in bytes (OTel system.filesystem.usage state=free).
+    - name: usage.used
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Used space in bytes (OTel system.filesystem.usage state=used).
+    - name: usage.reserved
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Reserved space in bytes (OTel system.filesystem.usage state=reserved).
+    - name: utilization
+      type: scaled_float
+      metric_type: gauge
+      unit: percent
+      scaling_factor: 10000
+      description: Filesystem utilization ratio (OTel system.filesystem.utilization).
+    - name: limit
+      type: long
+      metric_type: gauge
+      unit: byte
+      description: Total filesystem size (OTel system.filesystem.limit).

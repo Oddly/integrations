@@ -1,0 +1,17 @@
+---
+description: OTel system metrics semantic convention fields for process summary
+processors:
+  # system.process.count: only running is available from node_exporter
+  - set:
+      tag: set_process_count_running
+      if: ctx.prometheus?.metrics?.node_procs_running != null
+      field: system.process.count.running
+      copy_from: prometheus.metrics.node_procs_running
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline otel failed with message {{ _ingest.on_failure_message }}"

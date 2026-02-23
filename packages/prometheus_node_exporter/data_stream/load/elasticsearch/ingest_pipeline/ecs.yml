@@ -1,0 +1,62 @@
+---
+description: ECS system.load fields (removable for OTel-only mode)
+processors:
+  # Rename load metrics to ECS system.load fields
+  - set:
+      tag: set_load1
+      if: ctx.prometheus?.metrics?.node_load1 != null
+      field: system.load.1
+      copy_from: prometheus.metrics.node_load1
+  - set:
+      tag: set_load5
+      if: ctx.prometheus?.metrics?.node_load5 != null
+      field: system.load.5
+      copy_from: prometheus.metrics.node_load5
+  - set:
+      tag: set_load15
+      if: ctx.prometheus?.metrics?.node_load15 != null
+      field: system.load.15
+      copy_from: prometheus.metrics.node_load15
+
+  # Compute uptime from boot time
+  - script:
+      tag: compute_uptime
+      lang: painless
+      if: ctx.prometheus?.metrics?.node_boot_time_seconds != null
+      source: >-
+        double boot_seconds = ctx.prometheus.metrics.node_boot_time_seconds;
+        long now_ms = System.currentTimeMillis();
+        long boot_ms = (long)(boot_seconds * 1000.0);
+        ctx.system.put('uptime', new HashMap());
+        ctx.system.uptime.put('duration', new HashMap());
+        ctx.system.uptime.duration.ms = now_ms - boot_ms;
+
+  # Compute system.load.cores and normalized load from agent-injected core count
+  - script:
+      tag: compute_normalized_load
+      lang: painless
+      if: ctx._node_exporter?.cores != null && ctx._node_exporter.cores > 0
+      source: >-
+        int cores = ctx._node_exporter.cores;
+        def load = ctx.system?.load;
+        if (load == null) return;
+        load.cores = cores;
+        if (load.containsKey('1') && load.get('1') != null) {
+          def norm = new HashMap();
+          load.put('norm', norm);
+          norm.put('1', load.get('1') / cores);
+          if (load.containsKey('5') && load.get('5') != null) {
+            norm.put('5', load.get('5') / cores);
+          }
+          if (load.containsKey('15') && load.get('15') != null) {
+            norm.put('15', load.get('15') / cores);
+          }
+        }
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline ecs failed with message {{ _ingest.on_failure_message }}"

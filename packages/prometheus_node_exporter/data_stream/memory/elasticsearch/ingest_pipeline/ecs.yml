@@ -1,0 +1,70 @@
+---
+description: ECS system.memory fields (removable for OTel-only mode)
+processors:
+  # --- Memory fields: system.* (System integration compatible) ---
+  - set:
+      tag: set_mem_total
+      if: ctx.prometheus?.metrics?.node_memory_MemTotal_bytes != null
+      field: system.memory.total
+      copy_from: prometheus.metrics.node_memory_MemTotal_bytes
+  - set:
+      tag: set_mem_free
+      if: ctx.prometheus?.metrics?.node_memory_MemFree_bytes != null
+      field: system.memory.free
+      copy_from: prometheus.metrics.node_memory_MemFree_bytes
+  - set:
+      tag: set_mem_available
+      if: ctx.prometheus?.metrics?.node_memory_MemAvailable_bytes != null
+      field: system.memory.actual.free
+      copy_from: prometheus.metrics.node_memory_MemAvailable_bytes
+  - set:
+      tag: set_swap_total
+      if: ctx.prometheus?.metrics?.node_memory_SwapTotal_bytes != null
+      field: system.memory.swap.total
+      copy_from: prometheus.metrics.node_memory_SwapTotal_bytes
+  - set:
+      tag: set_swap_free
+      if: ctx.prometheus?.metrics?.node_memory_SwapFree_bytes != null
+      field: system.memory.swap.free
+      copy_from: prometheus.metrics.node_memory_SwapFree_bytes
+  - set:
+      tag: set_mem_cached
+      if: ctx.prometheus?.metrics?.node_memory_Cached_bytes != null
+      field: system.memory.cached
+      copy_from: prometheus.metrics.node_memory_Cached_bytes
+
+  # Compute system-compatible derived fields
+  - script:
+      tag: compute_memory_derived
+      lang: painless
+      if: ctx.system?.memory?.total != null
+      source: >-
+        def mem = ctx.system.memory;
+        def total = mem.total;
+        if (mem.free != null) {
+          long usedBytes = (long)(total - mem.free);
+          mem.put('used', new HashMap());
+          mem.used.bytes = usedBytes;
+          if (total > 0) { mem.used.pct = (double)usedBytes / total; }
+        }
+        if (mem.containsKey('actual') && mem.actual.free != null) {
+          long actualUsedBytes = (long)(total - mem.actual.free);
+          mem.actual.put('used', new HashMap());
+          mem.actual.used.bytes = actualUsedBytes;
+          if (total > 0) { mem.actual.used.pct = (double)actualUsedBytes / total; }
+        }
+        def swap = mem.get('swap');
+        if (swap != null && swap.total != null && swap.free != null) {
+          long swapUsedBytes = (long)(swap.total - swap.free);
+          swap.put('used', new HashMap());
+          swap.used.bytes = swapUsedBytes;
+          if (swap.total > 0) { swap.used.pct = (double)swapUsedBytes / swap.total; }
+        }
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline ecs failed with message {{ _ingest.on_failure_message }}"

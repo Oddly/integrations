@@ -42,6 +42,18 @@
       metric_type: gauge
       unit: byte
       description: Memory used by UDP sockets in bytes.
+# --- OTel system metrics semantic convention fields ---
+- name: system.network.connection.count
+  type: group
+  fields:
+    - name: tcp.established
+      type: long
+      metric_type: gauge
+      description: Established TCP connections (OTel system.network.connections state=established).
+    - name: tcp.time_wait
+      type: long
+      metric_type: gauge
+      description: TCP connections in TIME_WAIT state (OTel system.network.connections state=time_wait).
 - name: node_exporter
   type: group
   fields:

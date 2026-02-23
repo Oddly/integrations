@@ -20,6 +20,15 @@
                     }
                 }
             },
+            "system": {
+                "cpu": {
+                    "time": 1234.56
+                }
+            },
+            "cpu": {
+                "mode": "user",
+                "logical_number": 0
+            },
             "service": {
                 "address": "localhost:9100",
                 "name": "node"
@@ -47,6 +56,15 @@
                         "total": 0
                     }
                 }
+            },
+            "system": {
+                "cpu": {
+                    "time": 5678.90
+                }
+            },
+            "cpu": {
+                "mode": "idle",
+                "logical_number": 0
             },
             "service": {
                 "address": "localhost:9100",

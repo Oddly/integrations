@@ -47,3 +47,46 @@
       type: long
       metric_type: counter
       description: Total outgoing packets dropped.
+    # --- OTel system.network fields (direction-suffixed) ---
+    - name: io.receive
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes received (OTel system.network.io direction=receive).
+    - name: io.transmit
+      type: long
+      metric_type: counter
+      unit: byte
+      description: Total bytes transmitted (OTel system.network.io direction=transmit).
+    - name: packets.receive
+      type: long
+      metric_type: counter
+      description: Total packets received (OTel system.network.packets direction=receive).
+    - name: packets.transmit
+      type: long
+      metric_type: counter
+      description: Total packets transmitted (OTel system.network.packets direction=transmit).
+    - name: errors.receive
+      type: long
+      metric_type: counter
+      description: Total receive errors (OTel system.network.errors direction=receive).
+    - name: errors.transmit
+      type: long
+      metric_type: counter
+      description: Total transmit errors (OTel system.network.errors direction=transmit).
+    - name: dropped.receive
+      type: long
+      metric_type: counter
+      description: Total incoming packets dropped (OTel system.network.dropped direction=receive).
+    - name: dropped.transmit
+      type: long
+      metric_type: counter
+      description: Total outgoing packets dropped (OTel system.network.dropped direction=transmit).
+# --- OTel network attribute fields ---
+- name: network.interface
+  type: group
+  fields:
+    - name: name
+      type: keyword
+      dimension: true
+      description: Network interface name (OTel attribute).

@@ -40,22 +40,17 @@ processors:
       field: prometheus.labels.job
       ignore_missing: true
 
-  # --- Aggregate doc (label-free metrics from stat + processes collectors) ---
-  - rename:
-      tag: rename_processes_pids
-      field: prometheus.metrics.node_processes_pids
-      target_field: system.process.summary.total
-      ignore_missing: true
-  - rename:
-      tag: rename_procs_running
-      field: prometheus.metrics.node_procs_running
-      target_field: system.process.summary.running
-      ignore_missing: true
-  - rename:
-      tag: rename_procs_blocked
-      field: prometheus.metrics.node_procs_blocked
-      target_field: system.process.summary.dead
-      ignore_missing: true
+  # Call ECS sub-pipeline
+  - pipeline:
+      name: '{{ IngestPipeline "ecs" }}'
+      tag: pipeline_ecs
+
+  # Call OTel sub-pipeline
+  - pipeline:
+      name: '{{ IngestPipeline "otel" }}'
+      tag: pipeline_otel
+
+  # Rename threads to node_exporter namespace (raw data)
   - rename:
       tag: rename_processes_threads
       field: prometheus.metrics.node_processes_threads

@@ -31,7 +31,32 @@
                             "bytes": 0,
                             "pct": 0.0
                         }
+                    },
+                    "usage": {
+                        "free": 1073741824,
+                        "used": 15621140480,
+                        "cached": 6442450944,
+                        "buffers": 268435456
+                    },
+                    "limit": 16694882304,
+                    "utilization": 0.9356843729444719,
+                    "linux": {
+                        "available": 8589934592,
+                        "shared": 67108864,
+                        "slab": {
+                            "usage": {
+                                "reclaimable": 402653184,
+                                "unreclaimable": 134217728
+                            }
+                        }
                     }
+                },
+                "paging": {
+                    "usage": {
+                        "free": 8589934592,
+                        "used": 0
+                    },
+                    "utilization": 0.0
                 }
             },
             "node_exporter": {

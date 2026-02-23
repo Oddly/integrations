@@ -1,0 +1,40 @@
+---
+description: OTel system metrics semantic convention fields for load averages
+processors:
+  # system.cpu.load_average: 1m, 5m, 15m load averages
+  - set:
+      tag: set_load_average_1m
+      if: ctx.prometheus?.metrics?.node_load1 != null
+      field: system.cpu.load_average.1m
+      copy_from: prometheus.metrics.node_load1
+  - set:
+      tag: set_load_average_5m
+      if: ctx.prometheus?.metrics?.node_load5 != null
+      field: system.cpu.load_average.5m
+      copy_from: prometheus.metrics.node_load5
+  - set:
+      tag: set_load_average_15m
+      if: ctx.prometheus?.metrics?.node_load15 != null
+      field: system.cpu.load_average.15m
+      copy_from: prometheus.metrics.node_load15
+
+  # system.uptime: seconds since boot (OTel uses seconds, not ms)
+  - script:
+      tag: compute_otel_uptime
+      lang: painless
+      if: ctx.prometheus?.metrics?.node_boot_time_seconds != null
+      source: >-
+        double boot_seconds = ctx.prometheus.metrics.node_boot_time_seconds;
+        long now_seconds = System.currentTimeMillis() / 1000L;
+        long uptime_seconds = now_seconds - (long)boot_seconds;
+        if (ctx.system == null) ctx.system = new HashMap();
+        if (ctx.system.uptime == null) ctx.system.put('uptime', new HashMap());
+        ctx.system.uptime.seconds = uptime_seconds;
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline otel failed with message {{ _ingest.on_failure_message }}"

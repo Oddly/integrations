@@ -40,57 +40,15 @@ processors:
       field: prometheus.labels.job
       ignore_missing: true
 
-  # Rename load metrics to ECS system.load fields
-  - rename:
-      tag: rename_load1
-      field: prometheus.metrics.node_load1
-      target_field: system.load.1
-      ignore_missing: true
-  - rename:
-      tag: rename_load5
-      field: prometheus.metrics.node_load5
-      target_field: system.load.5
-      ignore_missing: true
-  - rename:
-      tag: rename_load15
-      field: prometheus.metrics.node_load15
-      target_field: system.load.15
-      ignore_missing: true
+  # Call ECS sub-pipeline
+  - pipeline:
+      name: '{{ IngestPipeline "ecs" }}'
+      tag: pipeline_ecs
 
-  # Compute uptime from boot time
-  - script:
-      tag: compute_uptime
-      lang: painless
-      if: ctx.prometheus?.metrics?.node_boot_time_seconds != null
-      source: >-
-        double boot_seconds = ctx.prometheus.metrics.node_boot_time_seconds;
-        long now_ms = System.currentTimeMillis();
-        long boot_ms = (long)(boot_seconds * 1000.0);
-        ctx.system.put('uptime', new HashMap());
-        ctx.system.uptime.put('duration', new HashMap());
-        ctx.system.uptime.duration.ms = now_ms - boot_ms;
-
-  # Compute system.load.cores and normalized load from agent-injected core count
-  - script:
-      tag: compute_normalized_load
-      lang: painless
-      if: ctx._node_exporter?.cores != null && ctx._node_exporter.cores > 0
-      source: >-
-        int cores = ctx._node_exporter.cores;
-        def load = ctx.system?.load;
-        if (load == null) return;
-        load.cores = cores;
-        if (load.containsKey('1') && load.get('1') != null) {
-          def norm = new HashMap();
-          load.put('norm', norm);
-          norm.put('1', load.get('1') / cores);
-          if (load.containsKey('5') && load.get('5') != null) {
-            norm.put('5', load.get('5') / cores);
-          }
-          if (load.containsKey('15') && load.get('15') != null) {
-            norm.put('15', load.get('15') / cores);
-          }
-        }
+  # Call OTel sub-pipeline
+  - pipeline:
+      name: '{{ IngestPipeline "otel" }}'
+      tag: pipeline_otel
 
   # Clean up temporary fields
   - remove:

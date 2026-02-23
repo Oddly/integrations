@@ -30,6 +30,16 @@
                             "memory": 8192
                         }
                     }
+                },
+                "network": {
+                    "connection": {
+                        "count": {
+                            "tcp": {
+                                "established": 42,
+                                "time_wait": 12
+                            }
+                        }
+                    }
                 }
             },
             "node_exporter": {

@@ -40,53 +40,20 @@ processors:
       field: prometheus.labels.job
       ignore_missing: true
 
-  # Rename device label to system.network dimension
-  - rename:
-      tag: rename_device_to_name
-      field: prometheus.labels.device
-      target_field: system.network.name
-      ignore_missing: true
+  # Call ECS sub-pipeline (reads prometheus.labels.device and prometheus.metrics.*)
+  - pipeline:
+      name: '{{ IngestPipeline "ecs" }}'
+      tag: pipeline_ecs
 
-  # --- Network fields: system.* (System integration compatible) ---
-  - rename:
-      tag: rename_receive_bytes
-      field: prometheus.metrics.node_network_receive_bytes_total
-      target_field: system.network.in.bytes
-      ignore_missing: true
-  - rename:
-      tag: rename_transmit_bytes
-      field: prometheus.metrics.node_network_transmit_bytes_total
-      target_field: system.network.out.bytes
-      ignore_missing: true
-  - rename:
-      tag: rename_receive_packets
-      field: prometheus.metrics.node_network_receive_packets_total
-      target_field: system.network.in.packets
-      ignore_missing: true
-  - rename:
-      tag: rename_transmit_packets
-      field: prometheus.metrics.node_network_transmit_packets_total
-      target_field: system.network.out.packets
-      ignore_missing: true
-  - rename:
-      tag: rename_receive_errs
-      field: prometheus.metrics.node_network_receive_errs_total
-      target_field: system.network.in.errors
-      ignore_missing: true
-  - rename:
-      tag: rename_transmit_errs
-      field: prometheus.metrics.node_network_transmit_errs_total
-      target_field: system.network.out.errors
-      ignore_missing: true
-  - rename:
-      tag: rename_receive_drop
-      field: prometheus.metrics.node_network_receive_drop_total
-      target_field: system.network.in.dropped
-      ignore_missing: true
-  - rename:
-      tag: rename_transmit_drop
-      field: prometheus.metrics.node_network_transmit_drop_total
-      target_field: system.network.out.dropped
+  # Call OTel sub-pipeline (reads prometheus.labels.device and prometheus.metrics.*)
+  - pipeline:
+      name: '{{ IngestPipeline "otel" }}'
+      tag: pipeline_otel
+
+  # Clean up device label
+  - remove:
+      tag: remove_device_label
+      field: prometheus.labels.device
       ignore_missing: true
 
   # Drop remaining prometheus metrics

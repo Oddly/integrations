@@ -1,0 +1,92 @@
+---
+description: ECS system.socket.summary fields (removable for OTel-only mode)
+processors:
+  # Direct 1:1 mappings to system.socket.summary.*
+  - set:
+      tag: set_tcp_established
+      if: ctx.prometheus?.metrics?.node_netstat_Tcp_CurrEstab != null
+      field: system.socket.summary.tcp.all.established
+      copy_from: prometheus.metrics.node_netstat_Tcp_CurrEstab
+  - set:
+      tag: set_tcp_tw
+      if: ctx.prometheus?.metrics?.node_sockstat_TCP_tw != null
+      field: system.socket.summary.tcp.all.time_wait
+      copy_from: prometheus.metrics.node_sockstat_TCP_tw
+  - set:
+      tag: set_tcp_orphan
+      if: ctx.prometheus?.metrics?.node_sockstat_TCP_orphan != null
+      field: system.socket.summary.tcp.all.orphan
+      copy_from: prometheus.metrics.node_sockstat_TCP_orphan
+  - set:
+      tag: set_tcp_mem
+      if: ctx.prometheus?.metrics?.node_sockstat_TCP_mem_bytes != null
+      field: system.socket.summary.tcp.memory
+      copy_from: prometheus.metrics.node_sockstat_TCP_mem_bytes
+  - set:
+      tag: set_udp_mem
+      if: ctx.prometheus?.metrics?.node_sockstat_UDP_mem_bytes != null
+      field: system.socket.summary.udp.memory
+      copy_from: prometheus.metrics.node_sockstat_UDP_mem_bytes
+
+  # Compute tcp.all.count, udp.all.count, all.count from IPv4+IPv6 sockstat values
+  - script:
+      tag: compute_socket_counts
+      lang: painless
+      source: >-
+        long tcp_inuse = 0;
+        long tcp6_inuse = 0;
+        long tcp_tw = 0;
+        long udp_inuse = 0;
+        long udp6_inuse = 0;
+        if (ctx.node_exporter?.socket?.tcp?.inuse != null) {
+          tcp_inuse = (long)ctx.node_exporter.socket.tcp.inuse;
+        }
+        if (ctx.prometheus?.metrics?.node_sockstat_TCP6_inuse != null) {
+          tcp6_inuse = (long)ctx.prometheus.metrics.node_sockstat_TCP6_inuse;
+        }
+        if (ctx.system?.socket?.summary?.tcp?.all?.time_wait != null) {
+          tcp_tw = (long)ctx.system.socket.summary.tcp.all.time_wait;
+        }
+        if (ctx.prometheus?.metrics?.node_sockstat_UDP_inuse != null) {
+          udp_inuse = (long)ctx.prometheus.metrics.node_sockstat_UDP_inuse;
+        }
+        if (ctx.prometheus?.metrics?.node_sockstat_UDP6_inuse != null) {
+          udp6_inuse = (long)ctx.prometheus.metrics.node_sockstat_UDP6_inuse;
+        }
+        long tcp_count = tcp_inuse + tcp6_inuse + tcp_tw;
+        long udp_count = udp_inuse + udp6_inuse;
+        if (ctx.system == null) { ctx.system = new HashMap(); }
+        if (ctx.system.socket == null) { ctx.system.put('socket', new HashMap()); }
+        if (ctx.system.socket.summary == null) { ctx.system.socket.put('summary', new HashMap()); }
+        if (ctx.system.socket.summary.tcp == null) { ctx.system.socket.summary.put('tcp', new HashMap()); }
+        if (ctx.system.socket.summary.tcp.all == null) { ctx.system.socket.summary.tcp.put('all', new HashMap()); }
+        if (ctx.system.socket.summary.udp == null) { ctx.system.socket.summary.put('udp', new HashMap()); }
+        if (ctx.system.socket.summary.udp.all == null) { ctx.system.socket.summary.udp.put('all', new HashMap()); }
+        ctx.system.socket.summary.tcp.all.count = tcp_count;
+        ctx.system.socket.summary.udp.all.count = udp_count;
+        if (ctx.system.socket.summary.containsKey('all') == false) {
+          ctx.system.socket.summary.put('all', new HashMap());
+        }
+        ctx.system.socket.summary.all.count = tcp_count + udp_count;
+
+  # Clean up intermediate prometheus metrics used in script
+  - remove:
+      tag: remove_udp_inuse
+      field: prometheus.metrics.node_sockstat_UDP_inuse
+      ignore_missing: true
+  - remove:
+      tag: remove_tcp6_inuse
+      field: prometheus.metrics.node_sockstat_TCP6_inuse
+      ignore_missing: true
+  - remove:
+      tag: remove_udp6_inuse
+      field: prometheus.metrics.node_sockstat_UDP6_inuse
+      ignore_missing: true
+
+on_failure:
+  - set:
+      field: event.kind
+      value: pipeline_error
+  - append:
+      field: error.message
+      value: "Processor {{ _ingest.on_failure_processor_type }} with tag {{ _ingest.on_failure_processor_tag }} in pipeline ecs failed with message {{ _ingest.on_failure_message }}"
